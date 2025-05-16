@@ -1,0 +1,71 @@
+package ro.splitmate.expenses.internal;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ro.splitmate.customers.api.CustomerIdentifier;
+import ro.splitmate.expenses.api.ExpenseCreated;
+import ro.splitmate.expenses.api.ExpenseIdentifier;
+import ro.splitmate.payments.api.InternalReferenceIdentifier;
+import ro.splitmate.payments.api.PaymentOpened;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+class ExpenseManagement {
+    private final ExpenseRepository repository;
+    private final ShareRepository shareRepository;
+    private final ApplicationEventPublisher publisher;
+
+    ExpenseManagement(ExpenseRepository repository, ShareRepository shareRepository, ApplicationEventPublisher publisher) {
+        this.repository = repository;
+        this.shareRepository = shareRepository;
+        this.publisher = publisher;
+    }
+
+    public List<Expense> list(CustomerIdentifier customerId) {
+        return repository.findByUserId(customerId);
+    }
+
+    public List<Share> shares(CustomerIdentifier currentUserId,
+                              ExpenseIdentifier expenseIdentifier) {
+        return repository.findByUserIdAndId(currentUserId, expenseIdentifier)
+                .map(Expense::shares)
+                .orElse(List.of());
+    }
+
+    public Expense create(ExpenseController.CreateExpenseRequest req, CustomerIdentifier customerId) {
+        Expense expense = repository.create(req.getTitle(), req.getTargetAmount(), customerId);
+        publisher.publishEvent(new ExpenseCreated(customerId, expense.id(), expense.title(), expense.targetAmount()));
+        return expense;
+    }
+
+    @Transactional
+    public Share claimShare(ExpenseIdentifier expenseId,
+                            ExpenseController.ClaimShareRequest req,
+                            CustomerIdentifier currentUserId) {
+        Optional<Expense> expense = repository.findExpense(expenseId);
+        return expense
+                .filter(e -> {
+                    if (currentUserId.equals(e.userId())) {
+                        return true;
+                    }
+                    // TODO authorize claim using some code?
+                    return e.id() != null;
+                })
+                .map(e -> {
+                    e.claimAmountByUser(req.getTargetAmount(), currentUserId);
+                    Expense saved = repository.save(e);
+                    var claimed = saved.getPaymentAcceptedByUser(currentUserId)
+                                    .orElseThrow();
+                    publisher.publishEvent(new PaymentOpened(
+                            new InternalReferenceIdentifier(claimed.id().id()),
+                            claimed.sender(),
+                            claimed.receiver(),
+                            claimed.shareAmount()));
+                    return claimed;
+                })
+                .orElseThrow();
+    }
+}

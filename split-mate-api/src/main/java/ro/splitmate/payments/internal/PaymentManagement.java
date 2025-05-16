@@ -1,0 +1,57 @@
+package ro.splitmate.payments.internal;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ro.splitmate.customers.api.CustomerIdentifier;
+import ro.splitmate.payments.api.ExternalPaymentIdentifier;
+import ro.splitmate.payments.api.InternalReferenceIdentifier;
+import ro.splitmate.payments.api.PaymentIdentifier;
+import ro.splitmate.payments.api.PaymentStatusUpdated;
+import ro.splitmate.payments.internal.noda.NodaApiClient;
+import ro.splitmate.payments.internal.noda.Responses;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+class PaymentManagement {
+    private final PaymentRepository repository;
+    private final ApplicationEventPublisher publisher;
+    private final NodaApiClient apiClient;
+
+    PaymentManagement(PaymentRepository repository, ApplicationEventPublisher publisher, NodaApiClient apiClient) {
+        this.repository = repository;
+        this.publisher = publisher;
+        this.apiClient = apiClient;
+    }
+
+    public List<Payment> findByInternalReferenceIdAndSenderId(InternalReferenceIdentifier internalReferenceId, CustomerIdentifier customerId) {
+        return repository.findByInternalReferenceIdAndSenderId(internalReferenceId, customerId);
+    }
+
+    @Transactional
+    public Optional<Payment> initiate(PaymentIdentifier id, CustomerIdentifier customerId,
+                                      PaymentController.PaymentInitiateRequest initiateRequest) {
+        return repository.findByPaymentIdAndSenderId(id, customerId)
+                // TODO initiate one time only?
+                .map(p -> {
+                    Responses.PaymentResponse response = apiClient.createPayment(initiateRequest.getEmail(), p);
+                    p.onProviderUpdate(response);
+                    return repository.save(p);// TODO publish PaymentInitiated
+                });
+    }
+
+    @Transactional
+    public Optional<Payment> onReturn(ExternalPaymentIdentifier id, CustomerIdentifier customerId) {
+        return repository.findByExternalPaymentIdAndSenderId(id, customerId)
+                // TODO initiate one time only?
+                .map(p -> {
+                    Responses.PaymentResponse response = apiClient.getPayment(p);
+                    p.onProviderUpdate(response);
+                    publisher.publishEvent(new PaymentStatusUpdated(p.getInternalReferenceId(), response.status()));
+                    return repository.save(p);
+                });
+    }
+
+}

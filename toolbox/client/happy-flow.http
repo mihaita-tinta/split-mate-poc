@@ -1,0 +1,179 @@
+@alex=user0
+@john=user1
+@password=a
+
+### Authenticate Alex
+POST http://localhost:8080/token
+Authorization: Basic {{alex}} {{password}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("auth_token_alex", response.body);
+%}
+### Get current user for Alex
+GET http://localhost:8080/whoami
+Authorization: Bearer {{auth_token_alex}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+### Authenticate John
+POST http://localhost:8080/token
+Authorization: Basic {{john}} {{password}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("auth_token_john", response.body);
+%}
+
+
+### Get expenses
+GET http://localhost:8080/expenses
+Authorization: Bearer {{auth_token_alex}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+%}
+### Create expense
+POST http://localhost:8080/expenses
+Authorization: Bearer {{auth_token_alex}}
+Content-Type: application/json
+
+{
+  "title": "dinner with Gabi",
+  "targetAmount": 200.00
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("expenseId", jsonPath(response.body, "$.id"))
+
+ %}
+### Claim share
+PUT http://localhost:8080/expenses/{{expenseId}}/shares
+Authorization: Bearer {{auth_token_alex}}
+Content-Type: application/json
+
+{
+  "targetAmount": 100.00
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+ %}
+### Claim share
+PUT http://localhost:8080/expenses/{{expenseId}}/shares
+Authorization: Bearer {{auth_token_john}}
+Content-Type: application/json
+
+{
+  "targetAmount": 50.00
+}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+ %}
+
+### List shares
+GET http://localhost:8080/expenses/{{expenseId}}/shares
+Authorization: Bearer {{auth_token_alex}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("shareId", jsonPath(response.body, "$.shares[0].id"))
+
+%}
+
+### List payments for share
+GET http://localhost:8080/payments?internalReferenceId={{shareId}}
+Authorization: Bearer {{auth_token_john}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("paymentId", jsonPath(response.body, "$.payments[0].id"))
+
+%}
+### Initiate payment for share. Use GB33BUKB20201555555555
+POST http://localhost:8080/payments/{{paymentId}}
+Authorization: Bearer {{auth_token_john}}
+Content-Type: application/json
+
+{
+  "email": "test@example.com"
+}
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    var url = jsonPath(response.body, "$.url");
+    const searchParams = new URLSearchParams(url);
+
+    client.global.set("paymentReferenceId", searchParams.get('https://stage.checkout.noda.live/buffet?id'));
+
+%}
+
+### Redirect call
+GET http://localhost:8080/payments/returnurl?id={{paymentReferenceId}}&result=done&signature=dd7d64ee616092686d97baeed3633a91970793547a4a37c6498b9d87f2527951
+Authorization: Bearer {{auth_token_john}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+%}
+
+### Send payouts
+PUT http://localhost:8080/payouts
+Authorization: Bearer {{auth_token_alex}}
+Content-Type: application/json
+
+{
+  "receiverId": 123,
+  "expenseId": 222,
+  "amount": 9.99,
+  "title": "Manual Payout for expense"
+}
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### Get payouts
+GET http://localhost:8080/payouts
+Authorization: Bearer {{auth_token_alex}}
+Content-Type: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.global.set("payoutId", jsonPath(response.body, "$.payouts[0].id"));
+
+%}

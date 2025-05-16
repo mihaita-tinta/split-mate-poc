@@ -1,0 +1,30 @@
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+  postgres: {}
+  payouts: {}
+services:
+  postgres:
+    container_name: postgres
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=splitmate'
+      - 'POSTGRES_PASSWORD=modulith'
+      - 'POSTGRES_USER=modulith'
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  payouts-postgres:
+    container_name: payouts-postgres
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=payouts'
+      - 'POSTGRES_PASSWORD=modulith'
+      - 'POSTGRES_USER=modulith'
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - payouts:/var/lib/postgresql/data
