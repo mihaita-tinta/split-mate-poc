@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.payments.api.InternalReferenceIdentifier;
-import ro.splitmate.payments.api.PaymentStatus;
+import ro.splitmate.payments.internal.noda.PaymentStatus;
 import ro.splitmate.payments.internal.Payment;
 import ro.splitmate.types.CreationTime;
 import ro.splitmate.payments.api.ExternalPaymentIdentifier;

@@ -2,6 +2,7 @@ package ro.splitmate.expenses.internal;
 
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
+import ro.splitmate.payments.api.PaymentConfirmed;
 import ro.splitmate.types.CreationTime;
 import ro.splitmate.types.TargetAmount;
 import ro.splitmate.types.Title;
@@ -57,7 +58,7 @@ public class Expense {
         return shares;
     }
 
-    public Share claimAmountByUser(TargetAmount amount, CustomerIdentifier senderId) {
+    public Share claim(TargetAmount amount, CustomerIdentifier senderId) {
 
         BigDecimal remainingToBePaid = getAmountNotClaimed();
         if (remainingToBePaid
@@ -83,7 +84,7 @@ public class Expense {
                 });
         List<Share> updated = new ArrayList<>(
                 shares.stream()
-                        .filter(s ->! (s.status() == Share.Status.ACCEPTED_TO_PAY &&
+                        .filter(s -> !(s.status() == Share.Status.ACCEPTED_TO_PAY &&
                                 s.sender().equals(senderId)))
                         .toList()
         );
@@ -99,54 +100,30 @@ public class Expense {
                 .findFirst();
     }
 
-//    List<Share> mergeSharesBySenderId(List<Share> shares) {
-//
-//        List<Share> acceptedToPay = shares.stream()
-//                .filter(s -> s.status() == Share.Status.ACCEPTED_TO_PAY)
-//                .toList();
-//        List<Share> othersStatuses = shares.stream()
-//                .filter(s -> s.status() != Share.Status.ACCEPTED_TO_PAY)
-//                .toList();
-//
-//        Map<CustomerAndShareStatus, List<Share>> collect = acceptedToPay.stream()
-//                .collect(groupingBy(s -> new CustomerAndShareStatus(s.sender(), s.status())));
-//
-//        ArrayList<Share> merged = getShares(othersStatuses);
-//        merged
-//                .addAll(
-//                        collect
-//                                .entrySet()
-//                                .stream()
-//                                .map(sharesBySender -> {
-//                                    Share first = sharesBySender.getValue().getFirst();
-//                                    return new Share(first.id(),
-//                                            first.expenseId(),
-//                                            sharesBySender.getKey().customerId,
-//                                            first.receiver(),
-//                                            first.status(),
-//                                            new TargetAmount(getSharesTotal(sharesBySender.getValue())),
-//                                            new CreationTime(LocalDateTime.now())
-//                                    );
-//                                })
-//                                .toList());
-//        return merged;
-//    }
-
-    private static ArrayList<Share> getShares(List<Share> othersStatuses) {
-        return new ArrayList<>(othersStatuses);
+    void onPaymentConfirmed(PaymentConfirmed payment) {
+        shares.stream().filter(s -> s.id().equals(
+                        new ShareIdentifier(payment.internalReferenceIdentifier().id())))
+                .findAny()
+                .ifPresent(share -> {
+                    var newShare = share.onPaymentConfirmed();
+                    List<Share> withoutNewShare = shares
+                            .stream().filter(s -> !s.id().equals(newShare.id()))
+                            .toList();
+                    List<Share> includingNewShare = new ArrayList<>(withoutNewShare);
+                    includingNewShare.add(newShare);
+                    this.shares = includingNewShare;
+                });
     }
 
-    public void withShareUpdated(Share newShare) {
-        List<Share> includingNewShare = new ArrayList<>(shares
-                .stream().filter(s -> !s.id().equals(newShare.id()))
-                .toList());
-        includingNewShare.add(newShare);
-        this.shares = includingNewShare;
+    boolean settle() {
+        return isSettled();
     }
 
-    public boolean allSharesArePaid() {
+    private boolean isSettled() {
         return shares.stream()
-                .filter(s -> s.status() == Share.Status.PAYMENT_CONFIRMED)
+                .filter(s ->
+                        s.status() == Share.Status.PAYMENT_CONFIRMED
+                                || s.status() == Share.Status.OWNER_BEHALF)
                 .map(s -> s.shareAmount().targetAmount())
                 .reduce(new BigDecimal(0), BigDecimal::add)
                 .compareTo(targetAmount.targetAmount()) == 0;
@@ -166,7 +143,13 @@ public class Expense {
                 .reduce(new BigDecimal(0), BigDecimal::add);
     }
 
-    record CustomerAndShareStatus(CustomerIdentifier customerId, Share.Status status) {
-
+    BigDecimal getOwnedMoneyToReceiver() {
+        return shares.stream()
+                .filter(s -> {
+                    boolean isExpenseOwner = s.sender().equals(this.userId);
+                    return s.isPayed() && !isExpenseOwner;
+                })
+                .map(s -> s.shareAmount().targetAmount())
+                .reduce(new BigDecimal(0), BigDecimal::add);
     }
 }

@@ -1,12 +1,12 @@
 package ro.splitmate.payments.internal;
 
 import ro.splitmate.customers.api.CustomerIdentifier;
+import ro.splitmate.payments.internal.noda.PaymentStatus;
 import ro.splitmate.types.CreationTime;
 import ro.splitmate.types.TargetAmount;
 import ro.splitmate.payments.api.ExternalPaymentIdentifier;
 import ro.splitmate.payments.api.InternalReferenceIdentifier;
 import ro.splitmate.payments.api.PaymentIdentifier;
-import ro.splitmate.payments.api.PaymentStatus;
 import ro.splitmate.payments.internal.noda.Responses;
 
 public class Payment {
@@ -92,14 +92,11 @@ public class Payment {
             this.externalPaymentUrl = providerResponse.url();
         }
         switch (providerResponse.status()) {
-            case New -> {
+            case New, Processing -> {
                 this.status = Status.INITIATED;
             }
             case Done -> {
                 this.status = Status.PAID;
-            }
-            case Processing -> {
-                this.status = Status.INITIATED;
             }
         }
     }

@@ -5,44 +5,37 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
-import ro.splitmate.expenses.api.AllMoneyArePaid;
-import ro.splitmate.payments.api.PaymentStatusUpdated;
+import ro.splitmate.expenses.api.ExpenseSettled;
+import ro.splitmate.payments.api.PaymentConfirmed;
 
 @Component
 public class PaymentUpdatesEventListener {
     private static final Logger log = LoggerFactory.getLogger(PaymentUpdatesEventListener.class);
-    private final ShareRepository repository;
     private final ExpenseRepository expenseRepository;
     private final ApplicationEventPublisher publisher;
 
-    public PaymentUpdatesEventListener(ShareRepository repository, ExpenseRepository expenseRepository, ApplicationEventPublisher publisher) {
-        this.repository = repository;
+    public PaymentUpdatesEventListener(ExpenseRepository expenseRepository, ApplicationEventPublisher publisher) {
         this.expenseRepository = expenseRepository;
         this.publisher = publisher;
     }
 
 
     @ApplicationModuleListener
-    public void onPaymentNewStatus(PaymentStatusUpdated update) {
-        var expense = repository.findById(
-                        new ShareIdentifier(update.internalReferenceId().id()))
-                .map(s -> {
-                    Share updatedShare = s.onPaymentUpdate(update.status());
-                    return repository.save(updatedShare);
-                })
-                .flatMap(s -> expenseRepository.findExpense(s.expenseId())
+    public void onPaymentConfirmed(PaymentConfirmed update) {
+        var expense = expenseRepository.findByShareId(
+                        new ShareIdentifier(update.internalReferenceIdentifier().id()))
                         .map(e -> {
-                            e.withShareUpdated(s);
+                            e.onPaymentConfirmed(update);
                             return expenseRepository.update(e);
-                        }));
+                        });
 
         expense.ifPresent(e -> {
-            if (e.allSharesArePaid()) {
-                publisher.publishEvent(new AllMoneyArePaid(e.userId(), e.id(), e.title(), e.targetAmount()));
+            if (e.settle()) {
+                publisher.publishEvent(new ExpenseSettled(e.userId(), e.id(), e.title(), e.targetAmount()));
             }
         });
 
-        log.info("shareUpdateOnPaymentNewStatus - payment updated: {}", expense);
+        log.info("onPaymentConfirmed - expense: {}", expense);
     }
 
 }

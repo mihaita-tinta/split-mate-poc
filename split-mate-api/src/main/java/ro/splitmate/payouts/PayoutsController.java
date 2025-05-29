@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ro.splitmate.customers.api.CustomerIdentifier;
-import ro.splitmate.expenses.api.AllMoneyArePaid;
+import ro.splitmate.expenses.api.ExpenseSettled;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
 import ro.splitmate.types.TargetAmount;
 import ro.splitmate.types.Title;
@@ -42,9 +42,9 @@ class PayoutsController {
 
     @PutMapping("/payouts") //TODO only admin
     @Transactional
-    public AllMoneyArePaid retrigger(@RequestBody PayoutCreateRequest req) {
+    public ExpenseSettled retrigger(@RequestBody PayoutCreateRequest req) {
 
-        AllMoneyArePaid event = new AllMoneyArePaid(
+        ExpenseSettled event = new ExpenseSettled(
                 new CustomerIdentifier(req.receiverId),
                 new ExpenseIdentifier(req.expenseId),
                 new Title(req.title),

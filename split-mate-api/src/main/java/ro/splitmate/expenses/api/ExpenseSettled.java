@@ -5,7 +5,7 @@ import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.types.TargetAmount;
 import ro.splitmate.types.Title;
 
-@Externalized("expenses.AllMoneyArePaid::#{expenseId()}")
-public record AllMoneyArePaid(CustomerIdentifier id, ExpenseIdentifier expenseId, Title title, TargetAmount amount) {
+@Externalized("expenses.ExpenseSettled::#{expenseId()}")
+public record ExpenseSettled(CustomerIdentifier id, ExpenseIdentifier expenseId, Title title, TargetAmount amount) {
 }
 

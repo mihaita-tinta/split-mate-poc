@@ -4,9 +4,8 @@ import org.springframework.modulith.events.Externalized;
 
 import java.math.BigDecimal;
 
-@Externalized("expenses.AllMoneyArePaid::#{id()}")
-public record AllMoneyArePaid(CustomerIdentifier id, ExpenseIdentifier expenseId, Title title, TargetAmount amount) {
-
+@Externalized("expenses.ExpenseSettled::#{id()}")
+public record ExpenseSettled(CustomerIdentifier id, ExpenseIdentifier expenseId, Title title, TargetAmount amount) {
 
     public record CustomerIdentifier(Long id){}
     public record ExpenseIdentifier(Long id){}

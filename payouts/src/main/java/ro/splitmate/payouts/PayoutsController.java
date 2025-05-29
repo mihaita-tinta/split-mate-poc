@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ro.splitmate.payouts.AllMoneyArePaid.CustomerIdentifier;
+import ro.splitmate.payouts.ExpenseSettled.CustomerIdentifier;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,8 +30,8 @@ class PayoutsController {
                 List.of(
                 new PayoutDto(
                 new CustomerIdentifier(1L),
-                new AllMoneyArePaid.ExpenseIdentifier(2L),
-                new AllMoneyArePaid.TargetAmount(new BigDecimal(9.99))))
+                new ExpenseSettled.ExpenseIdentifier(2L),
+                new ExpenseSettled.TargetAmount(new BigDecimal(9.99))))
         );
     }
 
@@ -42,13 +42,13 @@ class PayoutsController {
         publisher.publishEvent(
                 new MoneySentToUser(
                         new CustomerIdentifier(req.receiverId),
-                        new AllMoneyArePaid.ExpenseIdentifier(req.expenseId),
-                        new AllMoneyArePaid.Title(req.title),
-                        new AllMoneyArePaid.TargetAmount(req.amount))
+                        new ExpenseSettled.ExpenseIdentifier(req.expenseId),
+                        new ExpenseSettled.Title(req.title),
+                        new ExpenseSettled.TargetAmount(req.amount))
         );
         return new PayoutDto(new CustomerIdentifier(req.receiverId),
-                new AllMoneyArePaid.ExpenseIdentifier(req.expenseId),
-                new AllMoneyArePaid.TargetAmount(req.amount));
+                new ExpenseSettled.ExpenseIdentifier(req.expenseId),
+                new ExpenseSettled.TargetAmount(req.amount));
     }
 
     public record PayoutCreateRequest(Long receiverId,
@@ -60,8 +60,8 @@ class PayoutsController {
     record PayoutsResponse(List<PayoutDto> payouts) {
     }
     record PayoutDto(@JsonUnwrapped(prefix = "receiver") CustomerIdentifier receiver,
-                     @JsonUnwrapped(prefix = "expense") AllMoneyArePaid.ExpenseIdentifier expenseId,
-                     @JsonUnwrapped AllMoneyArePaid.TargetAmount amount) {
+                     @JsonUnwrapped(prefix = "expense") ExpenseSettled.ExpenseIdentifier expenseId,
+                     @JsonUnwrapped ExpenseSettled.TargetAmount amount) {
     }
 
 }

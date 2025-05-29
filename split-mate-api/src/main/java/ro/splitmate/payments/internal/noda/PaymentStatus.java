@@ -1,4 +1,4 @@
-package ro.splitmate.payments.api;
+package ro.splitmate.payments.internal.noda;
 
 public enum PaymentStatus {
     New,

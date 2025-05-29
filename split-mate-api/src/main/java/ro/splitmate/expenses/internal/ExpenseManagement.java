@@ -53,7 +53,7 @@ class ExpenseManagement {
                     return e.id() != null;
                 })
                 .map(e -> {
-                    e.claimAmountByUser(req.getTargetAmount(), currentUserId);
+                    e.claim(req.getTargetAmount(), currentUserId);
                     Expense saved = repository.update(e);
                     var claimed = saved.getPaymentAcceptedByUser(currentUserId)
                             .orElseThrow();

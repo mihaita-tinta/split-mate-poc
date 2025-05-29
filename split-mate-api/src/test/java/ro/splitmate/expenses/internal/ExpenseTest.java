@@ -12,15 +12,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExpenseTest {
+    ExpenseIdentifier expenseId = new ExpenseIdentifier(1L);
+    CustomerIdentifier johnId = new CustomerIdentifier(2L);
+    CustomerIdentifier alexId = new CustomerIdentifier(3L);
 
     @Test
     void testMergeSharesByAcceptedToPay() {
         BigDecimal acceptedToPay = BigDecimal.valueOf(50.00);
-        ExpenseIdentifier expenseId = new ExpenseIdentifier(1L);
-        CustomerIdentifier johnId = new CustomerIdentifier(2L);
-        CustomerIdentifier alexId = new CustomerIdentifier(3L);
 
         Share johnShare1 = new Share(new ShareIdentifier(1L),
                 expenseId, johnId, alexId, Share.Status.ACCEPTED_TO_PAY,
@@ -41,7 +43,7 @@ class ExpenseTest {
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(johnShare1, alexShare));
 
-        Share updatedShare = expense.claimAmountByUser(
+        Share updatedShare = expense.claim(
                 new TargetAmount(BigDecimal.valueOf(25.00)),
                 johnId);
 
@@ -55,8 +57,6 @@ class ExpenseTest {
     @Test
     void testMergeSharesExcludesOtherStatuses() {
         ExpenseIdentifier expenseId = new ExpenseIdentifier(1L);
-        CustomerIdentifier johnId = new CustomerIdentifier(2L);
-        CustomerIdentifier alexId = new CustomerIdentifier(3L);
 
         Share johnShare1 = new Share(new ShareIdentifier(1L),
                 expenseId, johnId, alexId, Share.Status.PAYMENT_CONFIRMED,
@@ -64,7 +64,7 @@ class ExpenseTest {
                 new CreationTime(LocalDateTime.now())
         );
         Share alexShare = new Share(new ShareIdentifier(2L),
-                expenseId, alexId, alexId, Share.Status.ACCEPTED_TO_PAY,
+                expenseId, alexId, alexId, Share.Status.OWNER_BEHALF,
                 new TargetAmount(BigDecimal.valueOf(50.00)),
                 new CreationTime(LocalDateTime.now())
         );
@@ -77,7 +77,7 @@ class ExpenseTest {
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(johnShare1, alexShare));
 
-        Share updatedShare = expense.claimAmountByUser(
+        expense.claim(
                 new TargetAmount(BigDecimal.valueOf(25.00)),
                 johnId);
 
@@ -86,11 +86,82 @@ class ExpenseTest {
                 .filter(s -> s.sender().equals(alexId))
                 .findAny().get().shareAmount().targetAmount());
         assertEquals(BigDecimal.valueOf(25.00), expense.shares().stream()
-                .filter(s -> s.sender().equals(johnId) && s.status() == Share.Status.ACCEPTED_TO_PAY)
+                .filter(s -> s.sender().equals(johnId) && s.status() == Share.Status.OWNER_BEHALF)
                 .findAny().get().shareAmount().targetAmount());
         assertEquals(BigDecimal.valueOf(25.00), expense.shares().stream()
                 .filter(s -> s.sender().equals(johnId) && s.status() == Share.Status.PAYMENT_CONFIRMED)
                 .findAny().get().shareAmount().targetAmount());
+    }
+    @Test
+    void testOwnedMoney() {
+        ExpenseIdentifier expenseId = new ExpenseIdentifier(1L);
+
+        Share johnShare1 = new Share(new ShareIdentifier(1L),
+                expenseId, johnId, alexId, Share.Status.PAYMENT_CONFIRMED,
+                new TargetAmount(BigDecimal.valueOf(50.01)),
+                new CreationTime(LocalDateTime.now())
+        );
+        Share alexShare = new Share(new ShareIdentifier(2L),
+                expenseId, alexId, alexId, Share.Status.OWNER_BEHALF,
+                new TargetAmount(BigDecimal.valueOf(49.99)),
+                new CreationTime(LocalDateTime.now())
+        );
+
+        Expense expense = new Expense(
+                expenseId,
+                alexId,
+                new Title("testing"),
+                new TargetAmount(BigDecimal.valueOf(100.00)),
+                new CreationTime(LocalDateTime.now().minusHours(1)),
+                List.of(johnShare1, alexShare));
+
+        assertEquals(BigDecimal.valueOf(50.01), expense.getOwnedMoneyToReceiver());
+    }
+    @Test
+    void testSettle() {
+        ExpenseIdentifier expenseId = new ExpenseIdentifier(1L);
+
+        Share johnShare1 = new Share(new ShareIdentifier(1L),
+                expenseId, johnId, alexId, Share.Status.PAYMENT_CONFIRMED,
+                new TargetAmount(BigDecimal.valueOf(50.00)),
+                new CreationTime(LocalDateTime.now())
+        );
+        Share alexShare = new Share(new ShareIdentifier(2L),
+                expenseId, alexId, alexId, Share.Status.OWNER_BEHALF,
+                new TargetAmount(BigDecimal.valueOf(50.00)),
+                new CreationTime(LocalDateTime.now())
+        );
+
+        Expense expense = new Expense(
+                expenseId,
+                alexId,
+                new Title("testing"),
+                new TargetAmount(BigDecimal.valueOf(100.00)),
+                new CreationTime(LocalDateTime.now().minusHours(1)),
+                List.of(johnShare1, alexShare));
+
+        assertTrue(expense.settle());
+    }
+
+    @Test
+    void testNotSettled() {
+        ExpenseIdentifier expenseId = new ExpenseIdentifier(1L);
+
+        Share alexShare = new Share(new ShareIdentifier(2L),
+                expenseId, alexId, alexId, Share.Status.OWNER_BEHALF,
+                new TargetAmount(BigDecimal.valueOf(50.00)),
+                new CreationTime(LocalDateTime.now())
+        );
+
+        Expense expense = new Expense(
+                expenseId,
+                alexId,
+                new Title("testing"),
+                new TargetAmount(BigDecimal.valueOf(100.00)),
+                new CreationTime(LocalDateTime.now().minusHours(1)),
+                List.of(alexShare));
+
+        assertFalse(expense.settle());
     }
 
 }

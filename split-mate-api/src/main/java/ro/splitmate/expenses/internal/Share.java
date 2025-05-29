@@ -1,7 +1,7 @@
 package ro.splitmate.expenses.internal;
 
 import ro.splitmate.customers.api.CustomerIdentifier;
-import ro.splitmate.payments.api.PaymentStatus;
+import ro.splitmate.payments.internal.noda.PaymentStatus;
 import ro.splitmate.types.CreationTime;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
 import ro.splitmate.types.TargetAmount;
@@ -21,18 +21,16 @@ public record Share(
         PAYMENT_CONFIRMED,
         PAYMENT_FAILED,
         MONEY_RECEIVED,
-        OWNER_BEHALF,
+        OWNER_BEHALF;
+
+
     }
 
-    public Share onPaymentUpdate(PaymentStatus paymentStatus) {
-
-        var status = switch (paymentStatus) {
-            case New -> Status.PAYMENT_STARTED;
-            case Failed -> Status.PAYMENT_FAILED;
-            case Processing -> Status.PAYMENT_STARTED;
-            case Done -> Status.PAYMENT_CONFIRMED;
-        };
-        return new Share(id, expenseId, sender, receiver, status, shareAmount, creationDate);
+    public boolean isPayed() {
+        return this.status == Share.Status.PAYMENT_CONFIRMED;
+    }
+    public Share onPaymentConfirmed() {
+        return new Share(id, expenseId, sender, receiver, Status.PAYMENT_CONFIRMED, shareAmount, creationDate);
     }
 
     public Share withUpdatedAmount(TargetAmount newAmount) {
