@@ -43,15 +43,45 @@ class ExpenseTest {
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(johnShare1, alexShare));
 
-        Share updatedShare = expense.claim(
+        var updatedExpense = expense.claim(
                 new TargetAmount(BigDecimal.valueOf(25.00)),
                 johnId);
 
         assertEquals(2, expense.shares().size());
-        assertEquals(acceptedToPay, expense.shares().stream()
-                .filter(s -> s.sender().equals(alexId))
-                .findAny().get().shareAmount().targetAmount());
-        assertEquals(acceptedToPay, updatedShare.shareAmount().targetAmount());
+        assertEquals(acceptedToPay, updatedExpense.getShareNotPayedByUser(alexId)
+                .get().shareAmount().targetAmount());
+    }
+    @Test
+    void testMergeSharesByOwnerBehalf() {
+
+        Share johnShare1 = new Share(new ShareIdentifier(1L),
+                expenseId, johnId, alexId, Share.Status.ACCEPTED_TO_PAY,
+                new TargetAmount(BigDecimal.valueOf(25.00)),
+                new CreationTime(LocalDateTime.now())
+        );
+        Share alexShare = new Share(new ShareIdentifier(2L),
+                expenseId, alexId, alexId, Share.Status.OWNER_BEHALF,
+                new TargetAmount(BigDecimal.valueOf(50.00)),
+                new CreationTime(LocalDateTime.now())
+        );
+
+        Expense expense = new Expense(
+                expenseId,
+                alexId,
+                new Title("testing"),
+                new TargetAmount(BigDecimal.valueOf(100.00)),
+                new CreationTime(LocalDateTime.now().minusHours(1)),
+                List.of(johnShare1, alexShare));
+
+        var updatedExpense = expense.claim(
+                new TargetAmount(BigDecimal.valueOf(25.00)),
+                alexId);
+
+        assertEquals(2, updatedExpense.shares().size());
+        assertEquals(BigDecimal.valueOf(25.00), updatedExpense.getShareNotPayedByUser(johnId)
+                .get().shareAmount().targetAmount());
+        assertEquals(BigDecimal.valueOf(75.00), updatedExpense.getShareNotPayedByUser(alexId)
+                .get().shareAmount().targetAmount());
     }
 
     @Test
@@ -77,7 +107,7 @@ class ExpenseTest {
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(johnShare1, alexShare));
 
-        expense.claim(
+        expense = expense.claim(
                 new TargetAmount(BigDecimal.valueOf(25.00)),
                 johnId);
 

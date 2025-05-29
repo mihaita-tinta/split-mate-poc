@@ -49,7 +49,7 @@ Authorization: Bearer {{auth_token_alex}}
 Content-Type: application/json
 
 {
-  "title": "dinner with Gabi",
+  "title": "dinner with swat",
   "targetAmount": 200.00
 }
 

@@ -3,7 +3,6 @@ package ro.splitmate.payments.internal;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import ro.splitmate.payments.api.InternalReferenceIdentifier;
-import ro.splitmate.payments.api.PaymentIdentifier;
 
 @Component
 class InternalReferenceIdentifierConverter implements Converter<String, InternalReferenceIdentifier> {

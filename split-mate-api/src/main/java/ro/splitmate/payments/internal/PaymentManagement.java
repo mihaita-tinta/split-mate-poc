@@ -4,15 +4,12 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.splitmate.customers.api.CustomerIdentifier;
-import ro.splitmate.payments.api.ExternalPaymentIdentifier;
 import ro.splitmate.payments.api.InternalReferenceIdentifier;
 import ro.splitmate.payments.api.PaymentConfirmed;
-import ro.splitmate.payments.api.PaymentIdentifier;
 import ro.splitmate.payments.internal.noda.NodaApiClient;
 import ro.splitmate.payments.internal.noda.Responses;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service

@@ -19,7 +19,7 @@ public class PaymentOpenedEventListener {
 //    @Transactional(propagation = Propagation.REQUIRES_NEW)
 //    @TransactionalEventListener(fallbackExecution = true)
     @ApplicationModuleListener
-    public void onShareClaimed(PaymentOpened paymentOpened) {
+    public void onPaymentOpened(PaymentOpened paymentOpened) {
         Payment payment = paymentRepository.create(
                 paymentOpened.internalReferenceIdentifier(),
                 paymentOpened.senderId(),

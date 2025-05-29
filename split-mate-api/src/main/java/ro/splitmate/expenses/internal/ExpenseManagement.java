@@ -53,15 +53,21 @@ class ExpenseManagement {
                     return e.id() != null;
                 })
                 .map(e -> {
-                    e.claim(req.getTargetAmount(), currentUserId);
-                    Expense saved = repository.update(e);
-                    var claimed = saved.getPaymentAcceptedByUser(currentUserId)
+                    var updated = e.claim(req.getTargetAmount(), currentUserId);
+                    Expense saved = repository.update(updated);
+                    var claimed = saved.getShareNotPayedByUser(currentUserId)
+                            .map(s -> {
+                                if (s.shouldAllowNewPayments()) {
+                                    publisher.publishEvent(new PaymentOpened(
+                                            new InternalReferenceIdentifier(s.id().id()),
+                                            s.sender(),
+                                            s.receiver(),
+                                            s.shareAmount()));
+                                }
+                                return s;
+                            })
                             .orElseThrow();
-                    publisher.publishEvent(new PaymentOpened(
-                            new InternalReferenceIdentifier(claimed.id().id()),
-                            claimed.sender(),
-                            claimed.receiver(),
-                            claimed.shareAmount()));
+
                     return claimed;
                 })
                 .orElseThrow();

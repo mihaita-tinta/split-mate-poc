@@ -4,9 +4,7 @@ import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.payments.internal.noda.PaymentStatus;
 import ro.splitmate.types.CreationTime;
 import ro.splitmate.types.TargetAmount;
-import ro.splitmate.payments.api.ExternalPaymentIdentifier;
 import ro.splitmate.payments.api.InternalReferenceIdentifier;
-import ro.splitmate.payments.api.PaymentIdentifier;
 import ro.splitmate.payments.internal.noda.Responses;
 
 public class Payment {

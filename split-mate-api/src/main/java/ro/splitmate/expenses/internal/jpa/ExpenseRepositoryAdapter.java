@@ -3,6 +3,7 @@ package ro.splitmate.expenses.internal.jpa;
 import org.springframework.stereotype.Service;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
+import ro.splitmate.expenses.internal.ShareIdentifier;
 import ro.splitmate.types.TargetAmount;
 import ro.splitmate.types.Title;
 import ro.splitmate.expenses.internal.Expense;
@@ -43,6 +44,14 @@ class ExpenseRepositoryAdapter implements ExpenseRepository {
         return expenseRepository.findById(expenseIdentifier.id())
                 .map(JpaExpense::toDomain);
     }
+
+    @Override
+    public Optional<Expense> findByShareId(ShareIdentifier shareIdentifier) {
+        return shareRepository.findById(shareIdentifier.id())
+                .flatMap(share -> expenseRepository.findById(share.getExpenseId()))
+                .map(JpaExpense :: toDomain);
+    }
+
     @Override
     public Expense update(Expense expense) {
         JpaExpense entity = fromDomain(expense);

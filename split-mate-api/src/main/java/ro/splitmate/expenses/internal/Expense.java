@@ -13,56 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Expense {
-    private ExpenseIdentifier id;
-    private CustomerIdentifier userId;
-    private Title title;
-    private TargetAmount targetAmount;
-    private CreationTime creationDate;
-    private List<Share> shares;
+public record Expense(
+        ExpenseIdentifier id,
+        CustomerIdentifier userId,
+        Title title,
+        TargetAmount targetAmount,
+        CreationTime creationDate,
+        List<Share> shares
+) {
 
-    public Expense(ExpenseIdentifier id, CustomerIdentifier userId,
-                   Title title,
-                   TargetAmount targetAmount,
-                   CreationTime creationDate,
-                   List<Share> shares) {
-        this.id = id;
-        this.userId = userId;
-        this.title = title;
-        this.targetAmount = targetAmount;
-        this.creationDate = creationDate;
-        this.shares = shares;
-    }
-
-    public ExpenseIdentifier id() {
-        return id;
-    }
-
-    public CustomerIdentifier userId() {
-        return userId;
-    }
-
-    public Title title() {
-        return title;
-    }
-
-    public TargetAmount targetAmount() {
-        return targetAmount;
-    }
-
-    public CreationTime creationDate() {
-        return creationDate;
-    }
-
-    public List<Share> shares() {
-        return shares;
-    }
-
-    public Share claim(TargetAmount amount, CustomerIdentifier senderId) {
-
+    public Expense claim(TargetAmount amount, CustomerIdentifier senderId) {
         BigDecimal remainingToBePaid = getAmountNotClaimed();
-        if (remainingToBePaid
-                .compareTo(amount.targetAmount()) < 0) {
+        if (remainingToBePaid.compareTo(amount.targetAmount()) < 0) {
             BigDecimal exceededAmount = remainingToBePaid.subtract(amount.targetAmount());
             throw new TargetAmountExceeded(
                     "Remaining value to be paid is " + remainingToBePaid +
@@ -72,10 +34,10 @@ public class Expense {
                     remainingToBePaid);
         }
 
-        Share newShare = getPaymentAcceptedByUser(senderId)
+        Share newShare = getShareNotPayedByUser(senderId)
                 .map(s -> s.withUpdatedAmount(amount))
                 .orElseGet(() -> {
-                    Share.Status status = senderId.equals(userId) ? Share.Status.ACCEPTED_TO_PAY : Share.Status.OWNER_BEHALF;
+                    Share.Status status = senderId.equals(userId) ? Share.Status.OWNER_BEHALF : Share.Status.ACCEPTED_TO_PAY;
                     return new Share(null,
                             this.id, senderId, this.userId, status,
                             amount,
@@ -84,38 +46,50 @@ public class Expense {
                 });
         List<Share> updated = new ArrayList<>(
                 shares.stream()
-                        .filter(s -> !(s.status() == Share.Status.ACCEPTED_TO_PAY &&
+                        .filter(s -> !(
+                                (s.status() == Share.Status.ACCEPTED_TO_PAY
+                                || s.status() == Share.Status.OWNER_BEHALF)&&
                                 s.sender().equals(senderId)))
                         .toList()
         );
         updated.add(newShare);
-        this.shares = updated;
-        return newShare;
+        return new Expense(id, userId, title, targetAmount, creationDate, updated);
     }
 
-    Optional<Share> getPaymentAcceptedByUser(CustomerIdentifier senderId) {
+//    public Optional<Share> getShareAcceptedByUser(CustomerIdentifier senderId) {
+//        return shares.stream()
+//                .filter(s -> s.status() == Share.Status.ACCEPTED_TO_PAY &&
+//                        s.sender().equals(senderId))
+//                .findFirst();
+//    }
+
+    public Optional<Share> getShareNotPayedByUser(CustomerIdentifier senderId) {
         return shares.stream()
-                .filter(s -> s.status() == Share.Status.ACCEPTED_TO_PAY &&
-                        s.sender().equals(senderId))
+                .filter(s ->
+                        s.sender().equals(senderId) &&
+                                (s.status() == Share.Status.ACCEPTED_TO_PAY ||
+                                  s.status() == Share.Status.OWNER_BEHALF
+                                ))
                 .findFirst();
     }
 
-    void onPaymentConfirmed(PaymentConfirmed payment) {
-        shares.stream().filter(s -> s.id().equals(
+    public Expense onPaymentConfirmed(PaymentConfirmed payment) {
+        Optional<Share> maybeShare = shares.stream().filter(s -> s.id().equals(
                         new ShareIdentifier(payment.internalReferenceIdentifier().id())))
-                .findAny()
-                .ifPresent(share -> {
-                    var newShare = share.onPaymentConfirmed();
-                    List<Share> withoutNewShare = shares
-                            .stream().filter(s -> !s.id().equals(newShare.id()))
-                            .toList();
-                    List<Share> includingNewShare = new ArrayList<>(withoutNewShare);
-                    includingNewShare.add(newShare);
-                    this.shares = includingNewShare;
-                });
+                .findAny();
+        if (maybeShare.isPresent()) {
+            var newShare = maybeShare.get().onPaymentConfirmed();
+            List<Share> withoutNewShare = shares
+                    .stream().filter(s -> !s.id().equals(newShare.id()))
+                    .toList();
+            List<Share> includingNewShare = new ArrayList<>(withoutNewShare);
+            includingNewShare.add(newShare);
+            return new Expense(id, userId, title, targetAmount, creationDate, includingNewShare);
+        }
+        return this;
     }
 
-    boolean settle() {
+    public boolean settle() {
         return isSettled();
     }
 
@@ -129,21 +103,21 @@ public class Expense {
                 .compareTo(targetAmount.targetAmount()) == 0;
     }
 
-    BigDecimal getAmountNotClaimed() {
+    public BigDecimal getAmountNotClaimed() {
         return targetAmount.targetAmount().subtract(getAmountToBePaid());
     }
 
-    BigDecimal getAmountToBePaid() {
+    public BigDecimal getAmountToBePaid() {
         return getSharesTotal(shares);
     }
 
-    static BigDecimal getSharesTotal(List<Share> shares) {
+    public static BigDecimal getSharesTotal(List<Share> shares) {
         return shares.stream()
                 .map(s -> s.shareAmount().targetAmount())
                 .reduce(new BigDecimal(0), BigDecimal::add);
     }
 
-    BigDecimal getOwnedMoneyToReceiver() {
+    public BigDecimal getOwnedMoneyToReceiver() {
         return shares.stream()
                 .filter(s -> {
                     boolean isExpenseOwner = s.sender().equals(this.userId);

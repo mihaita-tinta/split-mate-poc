@@ -24,10 +24,7 @@ public class PaymentUpdatesEventListener {
     public void onPaymentConfirmed(PaymentConfirmed update) {
         var expense = expenseRepository.findByShareId(
                         new ShareIdentifier(update.internalReferenceIdentifier().id()))
-                        .map(e -> {
-                            e.onPaymentConfirmed(update);
-                            return expenseRepository.update(e);
-                        });
+                        .map(e -> expenseRepository.update(e.onPaymentConfirmed(update)));
 
         expense.ifPresent(e -> {
             if (e.settle()) {

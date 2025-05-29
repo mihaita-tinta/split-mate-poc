@@ -29,6 +29,9 @@ public record Share(
     public boolean isPayed() {
         return this.status == Share.Status.PAYMENT_CONFIRMED;
     }
+    public boolean shouldAllowNewPayments() {
+        return this.status == Status.ACCEPTED_TO_PAY;
+    }
     public Share onPaymentConfirmed() {
         return new Share(id, expenseId, sender, receiver, Status.PAYMENT_CONFIRMED, shareAmount, creationDate);
     }

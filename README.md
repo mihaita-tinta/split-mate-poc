@@ -46,3 +46,6 @@ service is starting the transactions for each operation and reliably sending eve
 - when payments are confirmed, the expense settles automatically
 - shares are hidden details of the expense and are not exposed in the api package
 - to avoid a database driven design, the jpa package implements the repositories.
+
+### payments
+- the api package has only input and output events: PaymentConfirmed and PaymentOpened

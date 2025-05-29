@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.types.TargetAmount;
-import ro.splitmate.payments.api.ExternalPaymentIdentifier;
 import ro.splitmate.payments.api.InternalReferenceIdentifier;
-import ro.splitmate.payments.api.PaymentIdentifier;
 
 import java.util.List;
 

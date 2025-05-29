@@ -40,6 +40,9 @@ public class JpaShare {
         return creationDate;
     }
 
+    public Long getExpenseId() {
+        return expenseId;
+    }
 
     static Share toDomain(JpaShare jpa) {
         return new Share(

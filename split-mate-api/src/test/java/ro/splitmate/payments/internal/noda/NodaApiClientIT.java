@@ -10,8 +10,8 @@ import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.payments.api.InternalReferenceIdentifier;
 import ro.splitmate.payments.internal.Payment;
 import ro.splitmate.types.CreationTime;
-import ro.splitmate.payments.api.ExternalPaymentIdentifier;
-import ro.splitmate.payments.api.PaymentIdentifier;
+import ro.splitmate.payments.internal.ExternalPaymentIdentifier;
+import ro.splitmate.payments.internal.PaymentIdentifier;
 import ro.splitmate.types.TargetAmount;
 
 import java.math.BigDecimal;
