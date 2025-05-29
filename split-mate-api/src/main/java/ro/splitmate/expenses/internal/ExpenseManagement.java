@@ -15,12 +15,10 @@ import java.util.Optional;
 @Service
 class ExpenseManagement {
     private final ExpenseRepository repository;
-    private final ShareRepository shareRepository;
     private final ApplicationEventPublisher publisher;
 
-    ExpenseManagement(ExpenseRepository repository, ShareRepository shareRepository, ApplicationEventPublisher publisher) {
+    ExpenseManagement(ExpenseRepository repository, ApplicationEventPublisher publisher) {
         this.repository = repository;
-        this.shareRepository = shareRepository;
         this.publisher = publisher;
     }
 
@@ -28,17 +26,17 @@ class ExpenseManagement {
         return repository.findByUserId(customerId);
     }
 
+    public Expense create(ExpenseController.CreateExpenseRequest req, CustomerIdentifier customerId) {
+        Expense expense = repository.create(req.getTitle(), req.getTargetAmount(), customerId);
+        publisher.publishEvent(new ExpenseCreated(customerId, expense.id(), expense.title(), expense.targetAmount()));
+        return expense;
+    }
+
     public List<Share> shares(CustomerIdentifier currentUserId,
                               ExpenseIdentifier expenseIdentifier) {
         return repository.findByUserIdAndId(currentUserId, expenseIdentifier)
                 .map(Expense::shares)
                 .orElse(List.of());
-    }
-
-    public Expense create(ExpenseController.CreateExpenseRequest req, CustomerIdentifier customerId) {
-        Expense expense = repository.create(req.getTitle(), req.getTargetAmount(), customerId);
-        publisher.publishEvent(new ExpenseCreated(customerId, expense.id(), expense.title(), expense.targetAmount()));
-        return expense;
     }
 
     @Transactional
@@ -56,9 +54,9 @@ class ExpenseManagement {
                 })
                 .map(e -> {
                     e.claimAmountByUser(req.getTargetAmount(), currentUserId);
-                    Expense saved = repository.save(e);
+                    Expense saved = repository.update(e);
                     var claimed = saved.getPaymentAcceptedByUser(currentUserId)
-                                    .orElseThrow();
+                            .orElseThrow();
                     publisher.publishEvent(new PaymentOpened(
                             new InternalReferenceIdentifier(claimed.id().id()),
                             claimed.sender(),

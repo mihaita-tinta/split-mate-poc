@@ -1,0 +1,294 @@
+<mxfile host="localhost" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" version="24.7.17">
+  <diagram name="Page-1" id="rhjjcETRnzIjfWQAwuPt">
+    <mxGraphModel dx="2554" dy="2007" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="30OxmQkAvvCfzUSp92-2-2" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=6;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1390" y="-190" as="sourcePoint" />
+            <mxPoint x="1460" y="-190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-3" value="Time" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=17;" parent="30OxmQkAvvCfzUSp92-2-2" vertex="1" connectable="0">
+          <mxGeometry x="-0.2286" y="-1" relative="1" as="geometry">
+            <mxPoint y="-21" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-4" value="Customer authenticated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="-30" y="210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-6" value="QR/onboarding link generated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="445" y="365" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-7" value="Expense updated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="505" y="285" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-10" value="Member notified" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1435" y="-110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-12" value="Confirmed amount calculated&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1110" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-13" value="Payment initiated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1950" y="405" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-14" value="Payment processed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1950" y="325" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-15" value="Payment confirmed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1980" y="495" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-16" value="Expense Paid percentage Updated&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2630" y="455" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-17" value="Report generated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2760" y="455" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-19" value="Member deleted" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1290" y="-60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-20" value="Expense deleted" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="990" y="145" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-24" value="Members notified" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2900" y="455" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-25" value="Customer" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="-220" y="200" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-26" value="create" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="140" y="210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-28" value="initiate payment" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1660" y="385" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-29" value="Expense" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="365" y="210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-38" value="ExpenseId,&lt;div&gt;Amount&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;CustomerId&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="990" y="395" width="110" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-39" value="Title&lt;div&gt;Target Amount&lt;/div&gt;&lt;div&gt;CustomerId&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="30" y="90" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-40" value="Expense,&lt;div&gt;Amount&lt;div&gt;Member&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="1160" y="-210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-42" value="Open Banking APIs" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d80073;strokeColor=#A50040;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="2030" y="-5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-44" value="How is the payment initiated?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="1660" y="475" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-45" value="How do we link to the initial share?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="2110" y="365" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-47" value="Extract details from photo" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="590" y="-240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-49" value="Sum of all total share amounts is less then or equal to the Expense total" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="1120" y="325" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-51" value="Add categorization" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="365" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-52" value="Biometric signature" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="1520" y="385" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-53" value="Request for feedback" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="2900" y="375" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="30OxmQkAvvCfzUSp92-2-54" value="Gamification: waze like logos for fast returns" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="1980" y="565" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-1" value="Customer onboarded" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="-180" y="180" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-5" value="invite friends" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="280" y="365" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-6" value="delete" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="860" y="145" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-7" value="Empty expense are deleted after 30 days" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="930" y="215" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-8" value="claim" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1120" y="405" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-9" value="Audit changes" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="660" y="285" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-10" value="add member" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1160" y="-130" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-12" value="reject" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1120" y="475" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-13" value="Share" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1250" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-14" value="Member added" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1290" y="-140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-15" value="delete member" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1160" y="-55" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-18" value="Photo,&lt;div&gt;Description,&lt;/div&gt;&lt;div&gt;Target Amount,&lt;/div&gt;&lt;div&gt;Confirmed percentage&lt;/div&gt;&lt;div&gt;Paid percentage&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="640" y="155" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-21" value="What happens with users who confirmed to pay?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="1070" y="215" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-22" value="Share paid" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2110" y="455" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-24" value="Payment" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1800" y="385" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-25" value="confirm payment" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1800" y="475" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-26" value="Payout" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="2350" y="365" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-27" value="create payout" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="2250" y="455" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-28" value="whenever there is a payment confirmed, a payout is created to send the received money to the owner" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="2235" y="185" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-32" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.alarm_clock;" parent="1" vertex="1">
+          <mxGeometry x="2286.5" y="135" width="27" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-34" value="Free users get their money in one payout at the end, with a delay" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="2240" y="275" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-35" value="Do we need an admin to verify these failures?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="2620" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-36" value="Picture" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="590" y="-170" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-37" value="upload picture" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="460" y="-210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-38" value="Picture Added" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="720" y="-210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-39" value="delete picture" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="460" y="-140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-40" value="Picture Deleted" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="720" y="-140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-42" value="Payment Opened" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1380" y="385" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-43" value="Owner doesn&#39;t receive money for his behalf" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="990" y="475" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4lX1ntdDpu1el6x4UEDv-44" value="Shares that are accepted needs to be merged into one bigger share" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="1250" y="530" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="D96xEpyhLgdfIxoccCS8-1" value="update" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="180" y="285" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="D96xEpyhLgdfIxoccCS8-2" value="Expense created" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="460" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="D96xEpyhLgdfIxoccCS8-3" value="list" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="180" y="130" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="D96xEpyhLgdfIxoccCS8-4" value="Users can see only their expenses&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="180" y="50" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="D96xEpyhLgdfIxoccCS8-7" value="list" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1120" y="555" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="D96xEpyhLgdfIxoccCS8-8" value="Add QR code/secret code to be able to claim" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="850" y="397.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="D96xEpyhLgdfIxoccCS8-9" value="A payment in opened everytime someone claims a share from an expense" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="1250" y="385" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="D96xEpyhLgdfIxoccCS8-10" value="ReferenceId&lt;div&gt;sender,&lt;/div&gt;&lt;div&gt;receiver,&lt;/div&gt;&lt;div&gt;amount&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="1385" y="455" width="110" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-1" value="Customer offboarded" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="2770" y="-10" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-2" value="What data should we delete?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="2770" y="70" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-4" value="Expense - something paid by a customer, aka: receiver. It is associated with an amount and a list of shares" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1230" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-5" value="Command - verb present tense" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-6" value="Event - verb past tense" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1070" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-7" value="&lt;font size=&quot;1&quot; style=&quot;&quot;&gt;&lt;b style=&quot;font-size: 25px;&quot;&gt;Legend&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="930" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-8" value="User of the system" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="595" y="980" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-9" value="Aggregate" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="570" y="1150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-10" value="Policy - rule" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="570" y="1070" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-11" value="Read model" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="690" y="980" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-12" value="External System" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d80073;strokeColor=#A50040;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="700" y="1070" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-13" value="Hot Point" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="700" y="1150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-14" value="Opportunities" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="830" y="1150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-18" value="Share - amount of money to be sent for some customer&#39;s part of the expense" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="590" y="1230" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-20" value="Payment - attempt to transfer money" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="740" y="1230" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-21" value="Payout - transfer of the money to the receiver of the expense" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="890" y="1230" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-23" value="Transaction Fee Created" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="2350" y="565" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-24" value="Payout amount updated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="2400" y="455" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-25" value="Use voucher codes for marketing campaigns" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="2350" y="640" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-27" value="Payout initiated" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="2500" y="375" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-28" value="Payout confirmed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="2630" y="375" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-29" value="Payout failed" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="2620" y="270" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-31" value="Amounts are positive" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="180" y="-25" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xu-ZV0e-iACbM0viocvb-32" value="Amounts are positive" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="315" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

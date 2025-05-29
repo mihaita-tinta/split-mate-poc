@@ -21,6 +21,7 @@ public record Share(
         PAYMENT_CONFIRMED,
         PAYMENT_FAILED,
         MONEY_RECEIVED,
+        OWNER_BEHALF,
     }
 
     public Share onPaymentUpdate(PaymentStatus paymentStatus) {

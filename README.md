@@ -5,3 +5,10 @@ It represents a Proof-Of-Concept to address several things:
 - Translate business knowledge into working code
 - Apply best practices in a distributed environment
 - Identify key metrics and potential performance problems
+
+
+To view the events open `drawio`:
+```shell
+docker run -it --rm --name="draw" -p 8080:8080 -p 8443:8443 jgraph/drawio
+```
+Open http://localhost:8080

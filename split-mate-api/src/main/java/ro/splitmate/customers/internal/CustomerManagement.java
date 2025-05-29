@@ -26,7 +26,7 @@ class CustomerManagement {
                 })
                 .orElseGet(() -> {
                     Customer domain = customers.create(username, password);
-                    publisher.publishEvent(new CustomerOnboarded(domain.getId()));
+                    publisher.publishEvent(new CustomerOnboarded(domain.id()));
                     return domain;
                 });
     }
@@ -37,7 +37,7 @@ class CustomerManagement {
 
     public Customer offboard(Customer customer) {
         customers.delete(customer);
-        publisher.publishEvent(new CustomerOffboarded(customer.getId()));
+        publisher.publishEvent(new CustomerOffboarded(customer.id()));
         return customer;
     }
 }

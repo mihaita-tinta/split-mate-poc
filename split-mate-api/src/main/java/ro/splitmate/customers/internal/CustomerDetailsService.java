@@ -23,9 +23,9 @@ class CustomerDetailsService implements UserDetailsService {
         log.info("loadUserByUsername - username: {}", username);
         return customers.findByUsername(username)
                 .map(customer -> User.builder()
-                        .username(customer.getUsername())
-                        .password(customer.getPassword())
-                        .authorities(customer.getRoles().stream()
+                        .username(customer.username())
+                        .password(customer.password())
+                        .authorities(customer.roles().stream()
                                 .map(SimpleGrantedAuthority::new)
                                 .toList())
                         .build())

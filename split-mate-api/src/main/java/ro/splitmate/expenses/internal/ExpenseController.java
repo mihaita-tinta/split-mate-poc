@@ -27,6 +27,15 @@ class ExpenseController {
         this.expenses = expenses;
     }
 
+    @PostMapping("/expenses")
+    public ExpenseDto create(@RequestBody CreateExpenseRequest req,
+                             CustomerIdentifier customerId) {
+        var e = expenses.create(req, customerId);
+        return new ExpenseDto(
+                e.id(),
+                e.title(),
+                e.targetAmount());
+    }
 
     @GetMapping("/expenses")
     public ListExpensesResponse list(CustomerIdentifier customerId) {
@@ -52,27 +61,17 @@ class ExpenseController {
         return new ListExpenseShareResponse(all);
     }
 
-    @PostMapping("/expenses")
-    public ExpenseDto create(@RequestBody CreateExpenseRequest req,
-                             CustomerIdentifier customerId) {
-        var e = expenses.create(req, customerId);
-        return new ExpenseDto(
-                e.id(),
-                e.title(),
-                e.targetAmount());
-    }
-
     @PutMapping("/expenses/{expenseId}/shares")
     public ShareDto claimShare(
                             @PathVariable ExpenseIdentifier expenseId,
                             @RequestBody ClaimShareRequest req,
                              CustomerIdentifier customerId) {
-        var e = expenses.claimShare(expenseId, req, customerId);
+        var share = expenses.claimShare(expenseId, req, customerId);
         return new ShareDto(
-                e.id(),
-                e.sender(),
-                e.status(),
-                e.shareAmount());
+                share.id(),
+                share.sender(),
+                share.status(),
+                share.shareAmount());
     }
 
     record ListExpensesResponse(List<ExpenseDto> expenses) {

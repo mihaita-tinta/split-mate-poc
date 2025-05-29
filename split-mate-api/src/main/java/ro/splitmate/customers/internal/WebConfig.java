@@ -54,7 +54,7 @@ public class WebConfig implements WebMvcConfigurer {
                 return null;
             }
             return userRepository.findByUsername(user.getName())
-                    .map(Customer::getId)
+                    .map(Customer::id)
                     .orElse(null);
         }
     }

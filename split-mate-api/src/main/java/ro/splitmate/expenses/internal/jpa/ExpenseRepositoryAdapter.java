@@ -44,7 +44,7 @@ class ExpenseRepositoryAdapter implements ExpenseRepository {
                 .map(JpaExpense::toDomain);
     }
     @Override
-    public Expense save(Expense expense) {
+    public Expense update(Expense expense) {
         JpaExpense entity = fromDomain(expense);
         shareRepository.saveAll(entity.getShares());
         return JpaExpense.toDomain(expenseRepository.save(entity));

@@ -73,11 +73,14 @@ public class Expense {
 
         Share newShare = getPaymentAcceptedByUser(senderId)
                 .map(s -> s.withUpdatedAmount(amount))
-                .orElseGet(() -> new Share(null,
-                        this.id, senderId, this.userId, Share.Status.ACCEPTED_TO_PAY,
-                        amount,
-                        new CreationTime(LocalDateTime.now())
-                ));
+                .orElseGet(() -> {
+                    Share.Status status = senderId.equals(userId) ? Share.Status.ACCEPTED_TO_PAY : Share.Status.OWNER_BEHALF;
+                    return new Share(null,
+                            this.id, senderId, this.userId, status,
+                            amount,
+                            new CreationTime(LocalDateTime.now())
+                    );
+                });
         List<Share> updated = new ArrayList<>(
                 shares.stream()
                         .filter(s ->! (s.status() == Share.Status.ACCEPTED_TO_PAY &&

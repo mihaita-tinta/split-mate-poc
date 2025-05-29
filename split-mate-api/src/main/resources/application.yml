@@ -14,6 +14,9 @@ spring:
   sql:
     init:
       mode: always
+  threads:
+    virtual:
+      enabled: true
 logging:
   level:
     ro.splitmate: DEBUG

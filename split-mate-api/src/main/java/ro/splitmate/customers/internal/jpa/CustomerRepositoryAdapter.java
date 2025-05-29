@@ -27,19 +27,20 @@ class CustomerRepositoryAdapter implements CustomerRepository {
     }
 
     private static Customer toDomain(JpaCustomer jpa) {
-        Customer c = new Customer(jpa.getUsername(),
-                jpa.getPassword(), new CustomerIdentifier(jpa.getId()),
+        Customer c = new Customer(new CustomerIdentifier(jpa.getId()),
+                jpa.getUsername(),
+                jpa.getPassword(),
+                List.of(jpa.getRoles().split(",")),
                 jpa.getCreationDate().toLocalDateTime());
-        c.setRoles(List.of(jpa.getRoles().split(",")));
         return c;
     }
 
     private static JpaCustomer fromDomain(Customer c) {
         JpaCustomer jpa = new JpaCustomer();
-        jpa.setUsername(c.getUsername());
-        jpa.setPassword(c.getPassword());
-        jpa.setRoles(String.join(",", c.getRoles()));
-        jpa.setCreationDate(Timestamp.from(c.getCreationDate().toInstant(ZoneOffset.UTC)));
+        jpa.setUsername(c.username());
+        jpa.setPassword(c.password());
+        jpa.setRoles(String.join(",", c.roles()));
+        jpa.setCreationDate(Timestamp.from(c.creationDate().toInstant(ZoneOffset.UTC)));
         return jpa;
     }
 

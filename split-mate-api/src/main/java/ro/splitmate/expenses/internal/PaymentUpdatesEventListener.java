@@ -33,7 +33,7 @@ public class PaymentUpdatesEventListener {
                 .flatMap(s -> expenseRepository.findExpense(s.expenseId())
                         .map(e -> {
                             e.withShareUpdated(s);
-                            return expenseRepository.save(e);
+                            return expenseRepository.update(e);
                         }));
 
         expense.ifPresent(e -> {

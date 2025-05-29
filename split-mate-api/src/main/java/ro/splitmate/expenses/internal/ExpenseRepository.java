@@ -15,7 +15,7 @@ public interface ExpenseRepository {
 
     Optional<Expense> findExpense(ExpenseIdentifier expenseIdentifier);
 
-    Expense save(Expense expense);
+    Expense update(Expense expense);
 
     Expense create(Title title, TargetAmount targetAmount, CustomerIdentifier customerId);
 

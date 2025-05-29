@@ -32,11 +32,11 @@ class CustomerController {
 
     private static CustomerDto toCustomerDto(Customer customer) {
         return new CustomerDto(
-                customer.getId().id().toString(),
-                customer.getUsername(),
-                customer.getRoles(),
+                customer.id().id().toString(),
+                customer.username(),
+                customer.roles(),
                 true,
-                customer.getCreationDate());
+                customer.creationDate());
     }
 
     record CustomerDto(String id, String username, List<String> roles,
