@@ -42,6 +42,9 @@ class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/index.html").permitAll()
+                        .requestMatchers("/participant.html").permitAll()
+                        .requestMatchers("/payments.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf((csrf) -> csrf.ignoringRequestMatchers("/token"))

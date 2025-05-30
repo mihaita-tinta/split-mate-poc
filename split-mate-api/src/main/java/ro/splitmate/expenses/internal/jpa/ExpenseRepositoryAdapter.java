@@ -36,7 +36,9 @@ class ExpenseRepositoryAdapter implements ExpenseRepository {
     public Optional<Expense> findByUserIdAndId(CustomerIdentifier customerId, ExpenseIdentifier expenseIdentifier) {
         return expenseRepository.findByUserIdAndId(customerId.id(), expenseIdentifier.id())
                 .map(JpaExpense::toDomain)
-                ;
+                .or(() -> shareRepository.findByExpenseIdAndSenderId(expenseIdentifier.id(), customerId.id())
+                        .flatMap(share -> expenseRepository.findById(share.getExpenseId()))
+                        .map(JpaExpense::toDomain));
     }
 
     @Override

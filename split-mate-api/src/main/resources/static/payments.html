@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Status</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .center-box {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 48px 32px;
+            text-align: center;
+            min-width: 320px;
+        }
+        .loader {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+            border: 6px solid #1976d2;
+            border-radius: 50%;
+            border-top: 6px solid #fff;
+            animation: spin 1s linear infinite;
+            margin-bottom: 18px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+        .thumbsup {
+            font-size: 64px;
+            color: #43a047;
+            margin-bottom: 18px;
+        }
+        .success-msg {
+            font-size: 1.2rem;
+            color: #1976d2;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="center-box" id="statusBox">
+        <div class="loader" id="loader"></div>
+        <div id="statusText">Processing your payment...</div>
+    </div>
+    <script>
+        async function main() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const token = localStorage.getItem('auth_token');
+            if (!id || !token) {
+                document.getElementById('statusText').textContent = 'Missing payment id or authentication token.';
+                document.getElementById('loader').style.display = 'none';
+                return;
+            }
+            try {
+                const res = await fetch(`/payments/returnurl?id=${encodeURIComponent(id)}&signature=doyouseethis&result=done`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (res.ok) {
+                    document.getElementById('statusBox').innerHTML = `
+                        <div class="thumbsup">👍</div>
+                        <div class="success-msg">Payment successful!</div>
+                    `;
+                } else {
+                    document.getElementById('statusBox').innerHTML = `
+                        <div style="font-size:48px;color:#e53935;">&#10060;</div>
+                        <div class="success-msg" style="color:#e53935;">Payment failed.</div>
+                    `;
+                }
+            } catch (e) {
+                document.getElementById('statusBox').innerHTML = `
+                    <div style="font-size:48px;color:#e53935;">&#10060;</div>
+                    <div class="success-msg" style="color:#e53935;">Error processing payment.</div>
+                `;
+            }
+        }
+        main();
+    </script>
+</body>
+</html>

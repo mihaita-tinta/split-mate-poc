@@ -37,7 +37,7 @@ public class Requests {
             return new PaymentCreate(amount,
                     Currency.RON,
                     paymentReferenceId,
-                    "http://localhost:8080/payments/returnurl",
+                    "http://localhost:8080/payments.html",
                     description,
                     email,
                     "sparkasse_de",

@@ -32,11 +32,9 @@ class ExpenseManagement {
         return expense;
     }
 
-    public List<Share> shares(CustomerIdentifier currentUserId,
+    public Optional<Expense> expense(CustomerIdentifier currentUserId,
                               ExpenseIdentifier expenseIdentifier) {
-        return repository.findByUserIdAndId(currentUserId, expenseIdentifier)
-                .map(Expense::shares)
-                .orElse(List.of());
+        return repository.findByUserIdAndId(currentUserId, expenseIdentifier);
     }
 
     @Transactional

@@ -38,7 +38,6 @@ public record Share(
 
     public Share withUpdatedAmount(TargetAmount newAmount) {
         return new Share(id, expenseId, sender, receiver, status,
-                new TargetAmount(shareAmount.targetAmount()
-                        .add(newAmount.targetAmount())), creationDate);
+                new TargetAmount(newAmount.targetAmount()), creationDate);
     }
 }

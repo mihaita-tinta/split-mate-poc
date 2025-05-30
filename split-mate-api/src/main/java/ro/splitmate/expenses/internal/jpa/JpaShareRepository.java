@@ -9,6 +9,5 @@ import java.util.Optional;
 @Repository
 interface JpaShareRepository extends CrudRepository<JpaShare, Long> {
 
-    List<JpaShare> findBySenderId(Long senderId);
     Optional<JpaShare> findByExpenseIdAndSenderId(Long expenseId, Long senderId);
 }

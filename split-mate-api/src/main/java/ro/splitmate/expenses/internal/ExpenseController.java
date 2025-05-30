@@ -3,6 +3,7 @@ package ro.splitmate.expenses.internal;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import ro.splitmate.expenses.api.ExpenseIdentifier;
 import ro.splitmate.types.TargetAmount;
 import ro.splitmate.types.Title;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -47,18 +49,22 @@ class ExpenseController {
     }
 
     @GetMapping("/expenses/{expenseId}/shares")
-    public ListExpenseShareResponse listShares(
+    public ResponseEntity<ListExpenseShareResponse> listShares(
             @PathVariable ExpenseIdentifier expenseId,
             CustomerIdentifier customerId) {
-        List<ShareDto> all = expenses.shares(customerId, expenseId)
-                .stream()
-                .map(e -> new ShareDto(
-                        e.id(),
-                        e.sender(),
-                        e.status(),
-                        e.shareAmount()))
-                .toList();
-        return new ListExpenseShareResponse(all);
+        return expenses.expense(customerId, expenseId)
+                .map(e -> new ListExpenseShareResponse(e.title().title(),
+                        e.targetAmount().targetAmount(),
+                        e.shares()
+                                .stream()
+                                .map(s -> new ShareDto(
+                                        s.id(),
+                                        s.sender(),
+                                        s.status(),
+                                        s.shareAmount()))
+                                .toList()))
+                .map(ResponseEntity :: ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/expenses/{expenseId}/shares")
@@ -123,7 +129,10 @@ class ExpenseController {
             @JsonUnwrapped Share.Status status,
             @JsonUnwrapped TargetAmount targetAmount) {
     }
-    record ListExpenseShareResponse(List<ShareDto> shares) {
+    record ListExpenseShareResponse(
+            String title,
+            BigDecimal targetAmount,
+            List<ShareDto> shares) {
     }
 
 }

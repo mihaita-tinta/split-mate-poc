@@ -23,12 +23,12 @@ public record Expense(
 ) {
 
     public Expense claim(TargetAmount amount, CustomerIdentifier senderId) {
-        BigDecimal remainingToBePaid = getAmountNotClaimed();
+        BigDecimal remainingToBePaid = getRemainingToBePaid().add(getAmountClaimedButNotPayedByUser(senderId));
         if (remainingToBePaid.compareTo(amount.targetAmount()) < 0) {
             BigDecimal exceededAmount = remainingToBePaid.subtract(amount.targetAmount());
             throw new TargetAmountExceeded(
                     "Remaining value to be paid is " + remainingToBePaid +
-                            ", exceeded by " + exceededAmount + " from total " + amount.targetAmount(),
+                            ", exceeded by " + exceededAmount + " from total " + this.targetAmount().targetAmount(),
                     targetAmount.targetAmount(),
                     amount.targetAmount(),
                     remainingToBePaid);
@@ -103,19 +103,18 @@ public record Expense(
                 .compareTo(targetAmount.targetAmount()) == 0;
     }
 
-    public BigDecimal getAmountNotClaimed() {
-        return targetAmount.targetAmount().subtract(getAmountToBePaid());
-    }
-
-    public BigDecimal getAmountToBePaid() {
-        return getSharesTotal(shares);
-    }
-
-    public static BigDecimal getSharesTotal(List<Share> shares) {
+    BigDecimal getAmountClaimedButNotPayedByUser(CustomerIdentifier senderId) {
         return shares.stream()
+                .filter(s -> !s.isPayed() && s.sender().equals(senderId))
                 .map(s -> s.shareAmount().targetAmount())
                 .reduce(new BigDecimal(0), BigDecimal::add);
     }
+    BigDecimal getRemainingToBePaid() {
+        return targetAmount.targetAmount().subtract(shares.stream()
+                .map(s -> s.shareAmount().targetAmount())
+                .reduce(new BigDecimal(0), BigDecimal::add));
+    }
+
 
     public BigDecimal getOwnedMoneyToReceiver() {
         return shares.stream()
