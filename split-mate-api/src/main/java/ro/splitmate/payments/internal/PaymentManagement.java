@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.payments.api.InternalReferenceIdentifier;
 import ro.splitmate.payments.api.PaymentConfirmed;
-import ro.splitmate.payments.internal.noda.NodaApiClient;
+import ro.splitmate.payments.internal.noda.PaymentApiClient;
 import ro.splitmate.payments.internal.noda.Responses;
 
 import java.util.List;
@@ -16,9 +16,9 @@ import java.util.Optional;
 class PaymentManagement {
     private final PaymentRepository repository;
     private final ApplicationEventPublisher publisher;
-    private final NodaApiClient apiClient;
+    private final PaymentApiClient apiClient;
 
-    PaymentManagement(PaymentRepository repository, ApplicationEventPublisher publisher, NodaApiClient apiClient) {
+    PaymentManagement(PaymentRepository repository, ApplicationEventPublisher publisher, PaymentApiClient apiClient) {
         this.repository = repository;
         this.publisher = publisher;
         this.apiClient = apiClient;

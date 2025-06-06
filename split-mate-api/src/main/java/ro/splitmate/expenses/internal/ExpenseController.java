@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
@@ -39,6 +40,14 @@ class ExpenseController {
                 e.targetAmount());
     }
 
+    @PostMapping("/expenses/{expenseId}/qr")
+    public ExpenseQRCode shareToOthers(
+            @PathVariable ExpenseIdentifier expenseId,
+            CustomerIdentifier customerId) {
+        var e = expenses.shareToOthers(customerId, expenseId);
+        return new ExpenseQRCode(e.url(), e.qrCode());
+    }
+
     @GetMapping("/expenses")
     public ListExpensesResponse list(CustomerIdentifier customerId) {
         List<ExpenseDto> all = expenses.list(customerId)
@@ -51,7 +60,25 @@ class ExpenseController {
     @GetMapping("/expenses/{expenseId}/shares")
     public ResponseEntity<ListExpenseShareResponse> listShares(
             @PathVariable ExpenseIdentifier expenseId,
-            CustomerIdentifier customerId) {
+            CustomerIdentifier customerId,
+            @RequestParam(value = "shareCode", required = false) String shareCode) {
+        // If shareCode is present, allow access if it matches the expense's code
+        if (shareCode != null && !shareCode.isBlank()) {
+            return expenses.expenseByShareCode(expenseId, shareCode)
+                    .map(e -> new ListExpenseShareResponse(e.title().title(),
+                            e.targetAmount().targetAmount(),
+                            e.shares()
+                                    .stream()
+                                    .map(s -> new ShareDto(
+                                            s.id(),
+                                            s.sender(),
+                                            s.status(),
+                                            s.shareAmount()))
+                                    .toList()))
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+        // Default: only allow owner
         return expenses.expense(customerId, expenseId)
                 .map(e -> new ListExpenseShareResponse(e.title().title(),
                         e.targetAmount().targetAmount(),
@@ -89,6 +116,9 @@ class ExpenseController {
             @JsonUnwrapped TargetAmount targetAmount) {
     }
 
+    record ExpenseQRCode(String url, String qrCode  ) {
+    }
+
     public static class CreateExpenseRequest {
         @JsonUnwrapped // TODO not yet supported for records deserialization
         Title title;
@@ -114,11 +144,15 @@ class ExpenseController {
 
     public static class ClaimShareRequest {
         private @JsonUnwrapped TargetAmount targetAmount;
+        private @JsonUnwrapped String shareCode;
 
         public TargetAmount getTargetAmount() {
             return targetAmount;
         }
 
+        public String getShareCode() {
+            return shareCode;
+        }
         public void setTargetAmount(TargetAmount targetAmount) {
             this.targetAmount = targetAmount;
         }

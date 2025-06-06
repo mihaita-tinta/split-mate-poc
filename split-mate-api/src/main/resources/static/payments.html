@@ -69,7 +69,8 @@
                         'Content-Type': 'application/json'
                     }
                 });
-                if (res.ok) {
+                const payment = await res.json();
+                if (res.ok && payment.payments[0].status === 'PAID') {
                     document.getElementById('statusBox').innerHTML = `
                         <div class="thumbsup">👍</div>
                         <div class="success-msg">Payment successful!</div>

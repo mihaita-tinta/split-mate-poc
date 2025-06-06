@@ -6,6 +6,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Component
 class CustomerInitializer {
@@ -20,11 +21,10 @@ class CustomerInitializer {
     @EventListener
     public void onStartup(ApplicationReadyEvent event) {
         log.info("onStartup - insert some users");
-        IntStream.range(0, 10)
-                .forEach(i -> {
-                    String username = "user" + i;
+        Stream.of("alex", "bob", "charlie", "dave", "eve", "frank", "grace", "heidi", "ivan", "judy")
+                .forEach(username -> {
                     try {
-                        customers.onboard(username, "{noop}a");
+                        customers.onboard(username, "{noop}" + username);
                     } catch (IllegalStateException e) {
                         log.debug("onStartup - user already present: {}", username);
                     }

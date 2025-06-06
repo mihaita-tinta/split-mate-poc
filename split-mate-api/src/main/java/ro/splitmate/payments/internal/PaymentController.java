@@ -55,7 +55,6 @@ class PaymentController {
     @GetMapping("/payments/returnurl")
     public ListSharePayments onReturnUrl(
             @RequestParam("id") ExternalPaymentIdentifier id,
-            @RequestParam String signature,// TODO may validate this?
             CustomerIdentifier customerId
     ) {
         List<PaymentDto> all = payments.onReturn(id, customerId)

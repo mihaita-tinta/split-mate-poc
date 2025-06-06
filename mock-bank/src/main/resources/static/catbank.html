@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mock Bank Login</title>
+  <style>
+    body {
+      background: #f4f6f8;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+<bank-login></bank-login>
+<script>
+class BankLogin extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.innerHTML = `
+      <style>
+        .login-container {
+          background: #fff;
+          border-radius: 14px;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+          padding: 36px 32px 28px 32px;
+          min-width: 320px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .cat-logo {
+          width: 100px;
+          height: 100px;
+          margin-bottom: 18px;
+          border-radius: 50%;
+          background: #f9e4b7;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 4px solid #e0b96a;
+          box-shadow: 0 2px 8px rgba(224,185,106,0.15);
+          position: relative;
+        }
+        .cat-face {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%,-50%);
+        }
+        .cat-ear {
+          width: 28px;
+          height: 28px;
+          background: #f9e4b7;
+          border: 4px solid #e0b96a;
+          border-bottom: none;
+          border-radius: 50% 50% 0 0;
+          position: absolute;
+          top: -18px;
+        }
+        .cat-ear.left {
+          left: 10px;
+          transform: rotate(-18deg);
+        }
+        .cat-ear.right {
+          right: 10px;
+          transform: rotate(18deg);
+        }
+        .cat-eyes {
+          display: flex;
+          justify-content: space-between;
+          width: 38px;
+          margin: 0 auto;
+        }
+        .cat-eye {
+          width: 8px;
+          height: 10px;
+          background: #222;
+          border-radius: 50%;
+        }
+        .cat-nose {
+          width: 12px;
+          height: 8px;
+          background: #e0b96a;
+          border-radius: 50% 50% 60% 60%;
+          margin: 6px auto 0 auto;
+        }
+        .cat-mouth {
+          width: 22px;
+          height: 12px;
+          border-bottom: 2px solid #e0b96a;
+          border-radius: 0 0 22px 22px;
+          margin: 2px auto 0 auto;
+        }
+        .bank-title {
+          font-size: 1.3rem;
+          font-weight: 600;
+          color: #e0b96a;
+          margin-bottom: 18px;
+          letter-spacing: 0.02em;
+        }
+        form {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          width: 100%;
+        }
+        input {
+          font-size: 1rem;
+          padding: 10px 12px;
+          border-radius: 6px;
+          border: 1px solid #cfd8dc;
+          outline: none;
+          transition: border 0.2s;
+        }
+        input:focus {
+          border-color: #e0b96a;
+          background: #fffbe7;
+        }
+        button {
+          background: linear-gradient(90deg, #e0b96a 0%, #f9e4b7 100%);
+          color: #222;
+          border: none;
+          font-weight: 600;
+          cursor: pointer;
+          border-radius: 6px;
+          font-size: 1rem;
+          padding: 10px 0;
+          margin-top: 8px;
+          box-shadow: 0 2px 8px rgba(224,185,106,0.08);
+          transition: background 0.2s;
+        }
+        button:hover {
+          background: linear-gradient(90deg, #f9e4b7 0%, #e0b96a 100%);
+        }
+      </style>
+      <div class="login-container">
+        <div class="cat-logo">
+          <div class="cat-ear left"></div>
+          <div class="cat-ear right"></div>
+          <div class="cat-face">
+            <div class="cat-eyes">
+              <div class="cat-eye"></div>
+              <div class="cat-eye"></div>
+            </div>
+            <div class="cat-nose"></div>
+            <div class="cat-mouth"></div>
+          </div>
+        </div>
+        <div class="bank-title">CatBank Login</div>
+        <form id="loginForm" autocomplete="off">
+          <input name="username" placeholder="Username" required>
+          <input name="password" type="password" placeholder="Password" required>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    `;
+  }
+
+  connectedCallback() {
+    this.shadowRoot.getElementById('loginForm').onsubmit = e => {
+      e.preventDefault();
+      // Forward id param if present
+      const params = new URLSearchParams(window.location.search);
+      const paymentId = params.get('id');
+      let next = 'catbank-home.html';
+      if (paymentId) next += `?id=${encodeURIComponent(paymentId)}`;
+      window.location.href = next;
+    };
+  }
+}
+customElements.define('bank-login', BankLogin);
+</script>
+</body>
+</html>

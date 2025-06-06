@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.types.CreationTime;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
+import ro.splitmate.types.ShareCode;
 import ro.splitmate.types.TargetAmount;
 import ro.splitmate.types.Title;
 import ro.splitmate.expenses.internal.Expense;
@@ -20,6 +21,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Entity
@@ -32,6 +34,7 @@ public class JpaExpense {
     @NotNull
     private Long userId;
     private String title;
+    private String shareCode;
     private BigDecimal targetAmount;
     private Timestamp creationDate;
 
@@ -48,6 +51,8 @@ public class JpaExpense {
                 new ExpenseIdentifier(jpa.id),
                 new CustomerIdentifier(jpa.userId),
                 new Title(jpa.title),
+                Optional.ofNullable(jpa.shareCode)
+                        .map(ShareCode::new),
                 new TargetAmount(jpa.targetAmount),
                 new CreationTime(jpa.getCreationDate().toLocalDateTime()),
                 jpa.shares
@@ -59,6 +64,8 @@ public class JpaExpense {
     static JpaExpense fromDomain(Expense e) {
         JpaExpense jpa = new JpaExpense();
         jpa.title = e.title().title();
+        e.shareCode()
+                .ifPresent(code -> jpa.shareCode = code.value());
         jpa.targetAmount = e.targetAmount().targetAmount();
         jpa.id = e.id().id();
         jpa.userId = e.userId().id();

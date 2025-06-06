@@ -37,6 +37,30 @@ class ExpenseManagement {
         return repository.findByUserIdAndId(currentUserId, expenseIdentifier);
     }
 
+    /**
+     * Find an expense by its id and a share code (for public/participant access).
+     */
+    public Optional<Expense> expenseByShareCode(ExpenseIdentifier expenseId, String shareCode) {
+        // Find the expense by id
+        Optional<Expense> expenseOpt = repository.findExpense(expenseId);
+        // Check if the share code matches (assuming Expense has a getShareCode() or similar)
+        return expenseOpt
+                .filter(e -> e.shareCode().isPresent())
+                .filter(e -> shareCode.equals(e.shareCode().get().value()));
+    }
+
+    public QrCode shareToOthers(CustomerIdentifier currentUserId,
+                              ExpenseIdentifier expenseIdentifier) {
+        var expense = repository.findByUserIdAndId(currentUserId, expenseIdentifier)
+                .orElseThrow();
+        expense = expense.shareToOthers(currentUserId);
+        expense = repository.update(expense);
+        String urlForParticipants = "http://localhost:8080/participant.html?expenseId="
+                + expenseIdentifier.id() + "&shareCode=" + expense.shareCode().get().value();
+        return new QrCode(urlForParticipants,
+                "https://api.qrserver.com/v1/create-qr-code/?data=" + urlForParticipants);
+    }
+
     @Transactional
     public Share claimShare(ExpenseIdentifier expenseId,
                             ExpenseController.ClaimShareRequest req,
@@ -48,7 +72,8 @@ class ExpenseManagement {
                         return true;
                     }
                     // TODO authorize claim using some code?
-                    return e.id() != null;
+                    return e.shareCode().isPresent()
+                    && e.shareCode().get().value().equals(req.getShareCode());
                 })
                 .map(e -> {
                     var updated = e.claim(req.getTargetAmount(), currentUserId);

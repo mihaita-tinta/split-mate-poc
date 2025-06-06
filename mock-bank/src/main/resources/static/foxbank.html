@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mock Bank Login</title>
+  <style>
+    body {
+      background: #f4f6f8;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+<bank-login></bank-login>
+<script>
+class BankLogin extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.innerHTML = `
+      <style>
+        .login-container {
+          background: #fff;
+          border-radius: 14px;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+          padding: 36px 32px 28px 32px;
+          min-width: 320px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .fox-logo {
+          width: 100px;
+          height: 100px;
+          margin-bottom: 18px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .bank-title {
+          font-size: 1.3rem;
+          font-weight: 600;
+          color: #ff9800;
+          margin-bottom: 18px;
+          letter-spacing: 0.02em;
+        }
+        form {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          width: 100%;
+        }
+        input {
+          font-size: 1rem;
+          padding: 10px 12px;
+          border-radius: 6px;
+          border: 1px solid #cfd8dc;
+          outline: none;
+          transition: border 0.2s;
+        }
+        input:focus {
+          border-color: #ff9800;
+          background: #fffbe7;
+        }
+        button {
+          background: linear-gradient(90deg, #ff9800 0%, #fff3e0 100%);
+          color: #222;
+          border: none;
+          font-weight: 600;
+          cursor: pointer;
+          border-radius: 6px;
+          font-size: 1rem;
+          padding: 10px 0;
+          margin-top: 8px;
+          box-shadow: 0 2px 8px rgba(255,152,0,0.08);
+          transition: background 0.2s;
+        }
+        button:hover {
+          background: linear-gradient(90deg, #fff3e0 0%, #ff9800 100%);
+        }
+      </style>
+      <div class="login-container">
+        <div class="fox-logo">
+          <!-- Cute orange fox SVG -->
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="48" fill="#fff3e0" stroke="#ff9800" stroke-width="4"/>
+            <!-- Fox face -->
+            <ellipse cx="50" cy="60" rx="28" ry="24" fill="#ff9800"/>
+            <!-- Fox ears -->
+            <polygon points="22,38 36,10 44,38" fill="#ff9800" stroke="#ff9800" stroke-width="2"/>
+            <polygon points="78,38 64,10 56,38" fill="#ff9800" stroke="#ff9800" stroke-width="2"/>
+            <!-- Inner ears -->
+            <polygon points="30,28 36,16 40,34" fill="#fff3e0"/>
+            <polygon points="70,28 64,16 60,34" fill="#fff3e0"/>
+            <!-- Eyes -->
+            <ellipse cx="40" cy="65" rx="3" ry="5" fill="#222"/>
+            <ellipse cx="60" cy="65" rx="3" ry="5" fill="#222"/>
+            <!-- Nose -->
+            <ellipse cx="50" cy="75" rx="3" ry="2" fill="#222"/>
+            <!-- Cheeks -->
+            <ellipse cx="36" cy="75" rx="5" ry="3" fill="#fff3e0"/>
+            <ellipse cx="64" cy="75" rx="5" ry="3" fill="#fff3e0"/>
+          </svg>
+        </div>
+        <div class="bank-title">FoxBank Login</div>
+        <form id="loginForm" autocomplete="off">
+          <input name="username" placeholder="Username" required>
+          <input name="password" type="password" placeholder="Password" required>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    `;
+  }
+
+  connectedCallback() {
+    this.shadowRoot.getElementById('loginForm').onsubmit = e => {
+      e.preventDefault();
+      // Forward id param if present
+      const params = new URLSearchParams(window.location.search);
+      const paymentId = params.get('id');
+      let next = 'foxbank-home.html';
+      if (paymentId) next += `?id=${encodeURIComponent(paymentId)}`;
+      window.location.href = next;
+    };
+  }
+}
+customElements.define('bank-login', BankLogin);
+</script>
+</body>
+</html>

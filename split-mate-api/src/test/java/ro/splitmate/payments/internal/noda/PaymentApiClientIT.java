@@ -23,15 +23,15 @@ import java.util.List;
  */
 @Disabled
 @SpringBootTest
-class NodaApiClientIT {
-    private static final Logger log = LoggerFactory.getLogger(NodaApiClientIT.class);
+class PaymentApiClientIT {
+    private static final Logger log = LoggerFactory.getLogger(PaymentApiClientIT.class);
 
     @Autowired
-    NodaApiClient noda;
+    PaymentApiClient client;
 
     @Test
-    void testNodaCalls() {
-        List<Responses.Bank> banks = noda.getBanks();
+    void testPaymentCalls() {
+        List<Responses.Bank> banks = client.getBanks();
         banks.forEach(bank -> log.info("Bank: {}", bank));
 
         String email = "junit@testing.dummy";
@@ -40,7 +40,7 @@ class NodaApiClientIT {
                 new InternalReferenceIdentifier(100L),
                 new CustomerIdentifier(1000L),
                 new CustomerIdentifier(1001L),
-                new TargetAmount(new BigDecimal(19.99)),
+                new TargetAmount(new BigDecimal("19.99")),
                 new CreationTime(LocalDateTime.now()),
                 Payment.Status.WAITING,
                 new ExternalPaymentIdentifier("46f5a1c3-d9bd-49c6-9b5c-03b80d889f6f"),
@@ -48,12 +48,12 @@ class NodaApiClientIT {
                 null
 
         );
-        var nodaPayment = noda.createPayment(email, payment);
-        log.info("nodaPayment - created: {}", nodaPayment);
-        payment.onProviderUpdate(nodaPayment);
-        var get = noda.getPayment(payment);
+        var remotePayment = client.createPayment(email, payment);
+        log.info("remotePayment - created: {}", remotePayment);
+        payment.onProviderUpdate(remotePayment);
+        var get = client.getPayment(payment);
         payment.onProviderUpdate(get);
-        log.info("nodaPayment - get: {}", get);
+        log.info("remotePayment - get: {}", get);
     }
 
 }

@@ -1,9 +1,11 @@
 package ro.splitmate.expenses.internal;
 
+import org.springframework.security.access.AccessDeniedException;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
 import ro.splitmate.payments.api.PaymentConfirmed;
 import ro.splitmate.types.CreationTime;
+import ro.splitmate.types.ShareCode;
 import ro.splitmate.types.TargetAmount;
 import ro.splitmate.types.Title;
 
@@ -12,11 +14,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public record Expense(
         ExpenseIdentifier id,
         CustomerIdentifier userId,
         Title title,
+        Optional<ShareCode> shareCode,
         TargetAmount targetAmount,
         CreationTime creationDate,
         List<Share> shares
@@ -48,27 +52,33 @@ public record Expense(
                 shares.stream()
                         .filter(s -> !(
                                 (s.status() == Share.Status.ACCEPTED_TO_PAY
-                                || s.status() == Share.Status.OWNER_BEHALF)&&
-                                s.sender().equals(senderId)))
+                                        || s.status() == Share.Status.OWNER_BEHALF) &&
+                                        s.sender().equals(senderId)))
                         .toList()
         );
         updated.add(newShare);
-        return new Expense(id, userId, title, targetAmount, creationDate, updated);
+        return new Expense(id, userId, title,
+                shareCode,
+                targetAmount, creationDate, updated);
     }
 
-//    public Optional<Share> getShareAcceptedByUser(CustomerIdentifier senderId) {
-//        return shares.stream()
-//                .filter(s -> s.status() == Share.Status.ACCEPTED_TO_PAY &&
-//                        s.sender().equals(senderId))
-//                .findFirst();
-//    }
+    public Expense shareToOthers(CustomerIdentifier currentUserId) {
+        if (!userId.equals(currentUserId)) {
+            throw new AccessDeniedException("Only the owner can share the expense");
+        }
+        return new Expense(id, userId, title,
+                Optional.of(
+                        new ShareCode(UUID.randomUUID().toString())
+                ),
+                targetAmount, creationDate, shares);
+       }
 
     public Optional<Share> getShareNotPayedByUser(CustomerIdentifier senderId) {
         return shares.stream()
                 .filter(s ->
                         s.sender().equals(senderId) &&
                                 (s.status() == Share.Status.ACCEPTED_TO_PAY ||
-                                  s.status() == Share.Status.OWNER_BEHALF
+                                        s.status() == Share.Status.OWNER_BEHALF
                                 ))
                 .findFirst();
     }
@@ -84,7 +94,9 @@ public record Expense(
                     .toList();
             List<Share> includingNewShare = new ArrayList<>(withoutNewShare);
             includingNewShare.add(newShare);
-            return new Expense(id, userId, title, targetAmount, creationDate, includingNewShare);
+            return new Expense(id, userId, title,
+                    shareCode,
+                    targetAmount, creationDate, includingNewShare);
         }
         return this;
     }
@@ -109,6 +121,7 @@ public record Expense(
                 .map(s -> s.shareAmount().targetAmount())
                 .reduce(new BigDecimal(0), BigDecimal::add);
     }
+
     BigDecimal getRemainingToBePaid() {
         return targetAmount.targetAmount().subtract(shares.stream()
                 .map(s -> s.shareAmount().targetAmount())

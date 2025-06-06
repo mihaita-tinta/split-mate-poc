@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mock Bank Login</title>
+  <style>
+    body {
+      background: #f4f6f8;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-container, .confirm-container {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+      padding: 36px 32px 28px 32px;
+      min-width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .fox-logo {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bank-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #ff9800;
+      margin-bottom: 18px;
+      letter-spacing: 0.02em;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+    input {
+      font-size: 1rem;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #cfd8dc;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input:focus {
+      border-color: #ff9800;
+      background: #fff3e0;
+    }
+    button {
+      background: linear-gradient(90deg, #ff9800 0%, #fff3e0 100%);
+      color: #222;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 1rem;
+      padding: 10px 0;
+      margin-top: 8px;
+      box-shadow: 0 2px 8px rgba(255,152,0,0.08);
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #fff3e0 0%, #ff9800 100%);
+    }
+    .payment-info {
+      margin: 18px 0 0 0;
+      width: 100%;
+      background: #fff3e0;
+      border-radius: 8px;
+      padding: 18px 14px;
+      color: #222;
+      font-size: 1.08rem;
+      box-shadow: 0 1px 4px rgba(255,152,0,0.07);
+    }
+    .amount {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ff9800;
+      margin-bottom: 6px;
+    }
+    .desc {
+      font-size: 1.1rem;
+      color: #b45e00;
+    }
+    .fingerprint {
+      width: 28px;
+      height: 28px;
+      display: inline-block;
+    }
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .loader {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border: 4px solid #ff9800;
+      border-radius: 50%;
+      border-top: 4px solid #fff;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+  </style>
+</head>
+<body>
+<bank-login></bank-login>
+<script>
+  class BankLogin extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({mode: 'open'});
+      this.shadowRoot.innerHTML = `
+      <style>
+        .login-container, .confirm-container {
+          background: #fff;
+          border-radius: 14px;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+          padding: 36px 32px 28px 32px;
+          min-width: 320px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .fox-logo {
+          width: 100px;
+          height: 100px;
+          margin-bottom: 18px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .bank-title {
+          font-size: 1.3rem;
+          font-weight: 600;
+          color: #ff9800;
+          margin-bottom: 18px;
+          letter-spacing: 0.02em;
+        }
+        form {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          width: 100%;
+        }
+        input {
+          font-size: 1rem;
+          padding: 10px 12px;
+          border-radius: 6px;
+          border: 1px solid #cfd8dc;
+          outline: none;
+          transition: border 0.2s;
+        }
+        input:focus {
+          border-color: #ff9800;
+          background: #fff3e0;
+        }
+        button {
+          background: linear-gradient(90deg, #ff9800 0%, #fff3e0 100%);
+          color: #222;
+          border: none;
+          font-weight: 600;
+          cursor: pointer;
+          border-radius: 6px;
+          font-size: 1rem;
+          padding: 10px 0;
+          margin-top: 8px;
+          box-shadow: 0 2px 8px rgba(255,152,0,0.08);
+          transition: background 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+        button:hover {
+          background: linear-gradient(90deg, #fff3e0 0%, #ff9800 100%);
+        }
+        .payment-info {
+          margin: 18px 0 0 0;
+          width: 100%;
+          background: #fff3e0;
+          border-radius: 8px;
+          padding: 18px 14px;
+          color: #222;
+          font-size: 1.08rem;
+          box-shadow: 0 1px 4px rgba(255,152,0,0.07);
+        }
+        .amount {
+          font-size: 1.4rem;
+          font-weight: 700;
+          color: #ff9800;
+          margin-bottom: 6px;
+        }
+        .desc {
+          font-size: 1.1rem;
+          color: #b45e00;
+        }
+        .fingerprint {
+          width: 28px;
+          height: 28px;
+          display: inline-block;
+        }
+        .loading {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-top: 18px;
+        }
+        .loader {
+          display: inline-block;
+          width: 32px;
+          height: 32px;
+          border: 4px solid #ff9800;
+          border-radius: 50%;
+          border-top: 4px solid #fff;
+          animation: spin 1s linear infinite;
+          margin-right: 10px;
+        }
+        @keyframes spin {
+          0% { transform: rotate(0deg);}
+          100% { transform: rotate(360deg);}
+        }
+      </style>
+      <div class="confirm-container" id="confirmBox" style="display:none;">
+        <div class="fox-logo">
+          <!-- Cute orange fox SVG -->
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="48" fill="#fff3e0" stroke="#ff9800" stroke-width="4"/>
+            <!-- Fox face -->
+            <ellipse cx="50" cy="60" rx="28" ry="24" fill="#ff9800"/>
+            <!-- Fox ears -->
+            <polygon points="22,38 36,10 44,38" fill="#ff9800" stroke="#ff9800" stroke-width="2"/>
+            <polygon points="78,38 64,10 56,38" fill="#ff9800" stroke="#ff9800" stroke-width="2"/>
+            <!-- Inner ears -->
+            <polygon points="30,28 36,16 40,34" fill="#fff3e0"/>
+            <polygon points="70,28 64,16 60,34" fill="#fff3e0"/>
+            <!-- Eyes -->
+            <ellipse cx="40" cy="65" rx="3" ry="5" fill="#222"/>
+            <ellipse cx="60" cy="65" rx="3" ry="5" fill="#222"/>
+            <!-- Nose -->
+            <ellipse cx="50" cy="75" rx="3" ry="2" fill="#222"/>
+            <!-- Cheeks -->
+            <ellipse cx="36" cy="75" rx="5" ry="3" fill="#fff3e0"/>
+            <ellipse cx="64" cy="75" rx="5" ry="3" fill="#fff3e0"/>
+          </svg>
+        </div>
+        <div class="bank-title">FoxBank Payment</div>
+        <div class="payment-info">
+          <div class="amount"></div>
+          <div class="desc"></div>
+        </div>
+        <form id="confirmForm" autocomplete="off">
+          <button type="submit">
+            <span>Confirm</span>
+            <span class="fingerprint">
+              <!-- Simple SVG fingerprint icon -->
+              <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+                <path d="M16 29c-3.5 0-7-2.5-7-7v-3c0-2.2 1.8-4 4-4h6c2.2 0 4 1.8 4 4v3c0 4.5-3.5 7-7 7z" stroke="#ff9800" stroke-width="2" fill="none"/>
+                <path d="M16 23v-4" stroke="#ff9800" stroke-width="2" stroke-linecap="round"/>
+                <path d="M12 19v-2c0-2.2 1.8-4 4-4s4 1.8 4 4v2" stroke="#ff9800" stroke-width="2" fill="none"/>
+                <path d="M10 15v-1c0-3.3 2.7-6 6-6s6 2.7 6 6v1" stroke="#ff9800" stroke-width="2" fill="none"/>
+              </svg>
+            </span>
+          </button>
+        </form>
+        <div id="loadingBox" class="loading" style="display:none;">
+          <span class="loader"></span>
+          <span>Processing...</span>
+          <span id="redirectMsg" style="display:none;margin-left:8px;">Redirecting back to your application ...</span>
+        </div>
+      </div>
+      <div id="fetchLoading" class="loading">
+        <span class="loader"></span>
+        <span>Loading payment details...</span>
+      </div>
+    `;
+    }
+
+    connectedCallback() {
+      // Get payment id from URL
+      const params = new URLSearchParams(window.location.search);
+      const paymentId = params.get('id');
+      const confirmBox = this.shadowRoot.getElementById('confirmBox');
+      const fetchLoading = this.shadowRoot.getElementById('fetchLoading');
+      if (!paymentId) {
+        fetchLoading.innerHTML = '<span style="color:#ff9800">Missing payment id</span>';
+        return;
+      }
+      fetch(`/api/payments/${paymentId}`)
+        .then(r => {
+          if (!r.ok) throw new Error('not found');
+          return r.json();
+        })
+        .then(data => {
+          this.shadowRoot.querySelector('.amount').textContent = data.amount + ' RON';
+          this.shadowRoot.querySelector('.desc').textContent = data.description;
+          fetchLoading.style.display = 'none';
+          confirmBox.style.display = '';
+        })
+        .catch(() => {
+          fetchLoading.innerHTML = `<span style="color:#ff9800;font-size:1.1em">Oops! 🦊 This payment link is as real as a fox in a chicken coop. Please check your link or ask your friend for a new one!</span>`;
+        });
+
+      this.shadowRoot.getElementById('confirmForm').onsubmit = e => {
+        e.preventDefault();
+        this.shadowRoot.getElementById('confirmForm').style.display = 'none';
+        this.shadowRoot.getElementById('loadingBox').style.display = 'flex';
+        fetch(`/api/payments/${paymentId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Failed' })
+        })
+        .then(() => {
+          const redirectMsg = this.shadowRoot.getElementById('redirectMsg');
+          redirectMsg.style.display = 'inline';
+          setTimeout(() => {
+            window.location.href = 'http://localhost:8080/payments.html?id=' + paymentId;
+          }, 1000);
+        });
+      };
+    }
+  }
+  customElements.define('bank-login', BankLogin);
+</script>
+</body>
+</html>

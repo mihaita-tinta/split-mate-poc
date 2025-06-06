@@ -93,6 +93,9 @@ public class Payment {
             case New, Processing -> {
                 this.status = Status.INITIATED;
             }
+            case Failed -> {
+                this.status = Status.REJECTED;
+            }
             case Done -> {
                 this.status = Status.PAID;
             }
