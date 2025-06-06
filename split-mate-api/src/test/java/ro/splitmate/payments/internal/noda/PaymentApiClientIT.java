@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ro.splitmate.customers.api.CustomerIdentifier;
-import ro.splitmate.payments.api.InternalReferenceIdentifier;
+import ro.splitmate.expenses.internal.payments.InternalReferenceIdentifier;
 import ro.splitmate.payments.internal.Payment;
 import ro.splitmate.types.CreationTime;
 import ro.splitmate.payments.internal.ExternalPaymentIdentifier;

@@ -270,7 +270,7 @@
             try {
                 const shareId = localStorage.getItem('shareId');
                 // Get paymentId for share
-                const paymentsRes = await fetch(`http://localhost:8080/payments?internalReferenceId=${shareId}`, {
+                const paymentsRes = await fetch(`http://localhost:8888/payments?internalReferenceId=${shareId}`, {
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.getItem('auth_token')
                     }
@@ -278,7 +278,7 @@
                 const payments = await paymentsRes.json();
                 const paymentId = payments.payments[0].id;
                 // Initiate payment (POST to /payments/${paymentId} with email)
-                const res = await fetch(`http://localhost:8080/payments/${paymentId}`, {
+                const res = await fetch(`http://localhost:8888/payments/${paymentId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

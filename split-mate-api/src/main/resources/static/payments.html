@@ -63,7 +63,7 @@
                 return;
             }
             try {
-                const res = await fetch(`/payments/returnurl?id=${encodeURIComponent(id)}&signature=doyouseethis&result=done`, {
+                const res = await fetch(`http://localhost:8888/payments/returnurl?id=${encodeURIComponent(id)}&signature=doyouseethis&result=done`, {
                     headers: {
                         'Authorization': 'Bearer ' + token,
                         'Content-Type': 'application/json'

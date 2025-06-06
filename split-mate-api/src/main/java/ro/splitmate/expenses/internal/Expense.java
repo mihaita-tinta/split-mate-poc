@@ -3,7 +3,7 @@ package ro.splitmate.expenses.internal;
 import org.springframework.security.access.AccessDeniedException;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
-import ro.splitmate.payments.api.PaymentConfirmed;
+import ro.splitmate.expenses.internal.payments.PaymentConfirmed;
 import ro.splitmate.types.CreationTime;
 import ro.splitmate.types.ShareCode;
 import ro.splitmate.types.TargetAmount;

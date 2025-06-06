@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.expenses.api.ExpenseCreated;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
-import ro.splitmate.payments.api.InternalReferenceIdentifier;
-import ro.splitmate.payments.api.PaymentOpened;
+import ro.splitmate.expenses.internal.payments.InternalReferenceIdentifier;
+import ro.splitmate.expenses.internal.payments.PaymentOpened;
 
 import java.util.List;
 import java.util.Optional;
