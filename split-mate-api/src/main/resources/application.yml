@@ -21,3 +21,8 @@ logging:
   level:
     ro.splitmate: DEBUG
     org.springframework.modulith: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info

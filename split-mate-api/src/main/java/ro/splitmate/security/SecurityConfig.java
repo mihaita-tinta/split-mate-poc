@@ -45,6 +45,7 @@ class SecurityConfig {
                         .requestMatchers("/index.html").permitAll()
                         .requestMatchers("/participant.html").permitAll()
                         .requestMatchers("/payments.html").permitAll()
+                        .requestMatchers("/actuator/prometheus").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf((csrf) -> csrf.ignoringRequestMatchers("/token"))

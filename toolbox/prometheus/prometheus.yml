@@ -36,11 +36,18 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'app'
+  - job_name: 'expenses'
     scrape_interval: 1s
     metrics_path: /actuator/prometheus
     static_configs:
       - targets: ['host.docker.internal:8080']
+        labels:
+          host: 'localhost'
+  - job_name: 'payments'
+    scrape_interval: 1s
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['host.docker.internal:8081']
         labels:
           host: 'localhost'
 #  - job_name: 'docker-app'

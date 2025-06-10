@@ -16,6 +16,11 @@ spring:
   sql:
     init:
       mode: always
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info
 logging:
   level:
     ro.splitmate.payouts: DEBUG

@@ -9,9 +9,9 @@ It represents a Proof-Of-Concept to address several things:
 
 To view the events open `drawio`:
 ```shell
-docker run -it --rm --name="draw" -p 8080:8080 -p 8443:8443 jgraph/drawio
+docker run -it --rm --name="draw" -p 8082:8080 -p 8443:8443 jgraph/drawio
 ```
-Open http://localhost:8080
+Open http://localhost:8082
 
 
 ## Benefits of choosing this modular architecture
