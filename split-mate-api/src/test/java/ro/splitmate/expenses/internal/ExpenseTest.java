@@ -11,6 +11,7 @@ import ro.splitmate.types.Title;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,6 +44,7 @@ class ExpenseTest {
                 expenseId,
                 alexId,
                 new Title("testing"),
+                Optional.empty(),
                 new TargetAmount(BigDecimal.valueOf(100.00)),
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(johnShare1, alexShare));
@@ -62,6 +64,7 @@ class ExpenseTest {
                 expenseId,
                 alexId,
                 new Title("testing"),
+                Optional.empty(),
                 new TargetAmount(BigDecimal.valueOf(100.00)),
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of());
@@ -119,6 +122,7 @@ class ExpenseTest {
                 expenseId,
                 alexId,
                 new Title("testing"),
+                Optional.empty(),
                 new TargetAmount(BigDecimal.valueOf(100.00)),
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(johnShare1, alexShare));
@@ -153,6 +157,7 @@ class ExpenseTest {
                 expenseId,
                 alexId,
                 new Title("testing"),
+                Optional.empty(),
                 new TargetAmount(BigDecimal.valueOf(100.00)),
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(johnShare1, alexShare));
@@ -191,6 +196,7 @@ class ExpenseTest {
                 expenseId,
                 alexId,
                 new Title("testing"),
+                Optional.empty(),
                 new TargetAmount(BigDecimal.valueOf(100.00)),
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(johnShare1, alexShare));
@@ -216,6 +222,7 @@ class ExpenseTest {
                 expenseId,
                 alexId,
                 new Title("testing"),
+                Optional.empty(),
                 new TargetAmount(BigDecimal.valueOf(100.00)),
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(johnShare1, alexShare));
@@ -237,6 +244,7 @@ class ExpenseTest {
                 expenseId,
                 alexId,
                 new Title("testing"),
+                Optional.empty(),
                 new TargetAmount(BigDecimal.valueOf(100.00)),
                 new CreationTime(LocalDateTime.now().minusHours(1)),
                 List.of(alexShare));
