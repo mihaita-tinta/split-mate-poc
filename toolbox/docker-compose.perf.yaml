@@ -1,61 +1,17 @@
 services:
-  wrk-wiremock:
-    platform: linux/arm64
-    image: 'wrk:latest'
-    volumes:
-      - ./reports/:/home/reports
-    scale: 1
-    command: # 62504.19 RPS
-      - -t50
-      - -c200
-      - -d30
-      - --latency
-      - http://wiremock:8080/api/users
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 256M
-        reservations:
-          cpus: '2'
-          memory: 256M
-  wrk-toxiproxy: #46798.14
-    platform: linux/arm64
-    image: 'wrk:latest'
-    volumes:
-      - ./reports/:/home/reports
-    scale: 1
-    command:
-      - -t50
-      - -c3000
-      - -d30
-      - --latency
-      - http://toxiproxy:8081/api/users
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 256M
-        reservations:
-          cpus: '2'
-          memory: 256M
   wrk-app:
     platform: linux/arm64
     image: 'wrk:latest'
     volumes:
-      - ./reports/:/home/reports
+      - ./wrk/reports:/home/reports
+      - ./wrk/post.lua:/home/post.lua
     command:
-      - -t1000
-      - -c1000
+      - -t10
+      - -c10
       - -d600
       - --latency
-#      - http://app:8080/api/v1/accounts-spring-data-cf-then-apply-async-vt/123
-#      - http://app:8080/api/v1/accounts-spring-data-cf-then-apply-async-cached-tp/123
-      - http://app:8080/api/v1/accounts-spring-data-cf-then-apply/123
-#      - http://app:8080/api/v1/accounts-spring-data-blocking/123
-
-#      - http://app:8080/api/v1/accounts-async-cql-template-before/123
-#      - http://app:8080/api/v1/accounts-async-cql-template-after/123
+      - -s/home/post.lua
+      - http://host.docker.internal:8080/expenses/117/shares
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     deploy:
@@ -66,41 +22,3 @@ services:
         reservations:
           cpus: '2'
           memory: 1G
-  wrk-webflux-app:
-    platform: linux/arm64
-    image: 'wrk:latest'
-    volumes:
-      - ./reports/:/home/reports
-    command:
-      - -t200
-      - -c500
-      - -d300
-      - --latency
-      - http://webflux-app:8080/accounts-mutiple-calls-webflux
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 256M
-        reservations:
-          cpus: '2'
-          memory: 256M
-  wrk-app-health:
-    platform: linux/arm64
-    image: 'wrk:latest'
-    volumes:
-      - ./reports/:/home/reports
-    command:
-      - -t100
-      - -c2000
-      - -d300
-      - --latency
-      - http://app:8080/actuator/health
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 256M
-        reservations:
-          cpus: '2'
-          memory: 256M

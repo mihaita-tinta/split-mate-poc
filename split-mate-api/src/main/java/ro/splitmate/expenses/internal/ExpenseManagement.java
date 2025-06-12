@@ -1,6 +1,7 @@
 package ro.splitmate.expenses.internal;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.splitmate.customers.api.CustomerIdentifier;
@@ -16,10 +17,12 @@ import java.util.Optional;
 class ExpenseManagement {
     private final ExpenseRepository repository;
     private final ApplicationEventPublisher publisher;
+    private final MyPublisher kafkaPublisher;
 
-    ExpenseManagement(ExpenseRepository repository, ApplicationEventPublisher publisher) {
+    ExpenseManagement(ExpenseRepository repository, ApplicationEventPublisher publisher, MyPublisher kafkaPublisher) {
         this.repository = repository;
         this.publisher = publisher;
+        this.kafkaPublisher = kafkaPublisher;
     }
 
     public List<Expense> list(CustomerIdentifier customerId) {
@@ -78,20 +81,24 @@ class ExpenseManagement {
                 .map(e -> {
                     var updated = e.claim(req.getTargetAmount(), currentUserId);
                     Expense saved = repository.update(updated);
-                    var claimed = saved.getShareNotPayedByUser(currentUserId)
+                    return saved.getShareNotPayedByUser(currentUserId)
                             .map(s -> {
                                 if (s.shouldAllowNewPayments()) {
-                                    publisher.publishEvent(new PaymentOpened(
+                                    kafkaPublisher.send(new PaymentOpened(
                                             new InternalReferenceIdentifier(s.id().id()),
                                             s.sender(),
                                             s.receiver(),
                                             s.shareAmount()));
+
+//                                    publisher.publishEvent(new PaymentOpened(
+//                                            new InternalReferenceIdentifier(s.id().id()),
+//                                            s.sender(),
+//                                            s.receiver(),
+//                                            s.shareAmount()));
                                 }
                                 return s;
                             })
                             .orElseThrow();
-
-                    return claimed;
                 })
                 .orElseThrow();
     }

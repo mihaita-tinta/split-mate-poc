@@ -17,6 +17,13 @@ spring:
   threads:
     virtual:
       enabled: true
+  kafka:
+    producer:
+        properties:
+          request.timeout.ms: 1000
+          max.block.ms: 2000
+#    bootstrap-servers: localhost:9192
+        bootstrap-servers: localhost:9092
 logging:
   level:
     ro.splitmate: DEBUG

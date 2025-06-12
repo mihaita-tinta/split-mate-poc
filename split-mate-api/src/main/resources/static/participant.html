@@ -161,6 +161,9 @@
               <div id="payLoading" style="display:none;margin-top:8px;">
                 <span class="loader"></span> Processing payment...
               </div>
+              <div id="payFailed" style="display:none;margin-top:8px;">
+                        <div style="font-size:24px;color:#e53935;">&#10060;Please try again later...</div>
+              </div>
             </form>
             <div id="result"></div>
             <div id="pie">
@@ -264,6 +267,7 @@
             const form = e.target;
             const payBtn = this.shadowRoot.getElementById('payBtn');
             const payLoading = this.shadowRoot.getElementById('payLoading');
+            const payFailed = this.shadowRoot.getElementById('payFailed');
             payBtn.disabled = true;
             payLoading.style.display = 'block';
 
@@ -276,6 +280,10 @@
                     }
                 });
                 const payments = await paymentsRes.json();
+                if (!payments.payments || payments.payments.length === 0 || !payments.payments[0].id) {
+                    payFailed.style.display = 'block';
+                    return;
+                }
                 const paymentId = payments.payments[0].id;
                 // Initiate payment (POST to /payments/${paymentId} with email)
                 const res = await fetch(`http://localhost:8888/payments/${paymentId}`, {

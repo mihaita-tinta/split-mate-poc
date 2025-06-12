@@ -105,7 +105,7 @@ Authorization: Bearer {{auth_token_john}}
 Content-Type: application/json
 
 {
-  "targetAmount": 100.00,
+  "targetAmount": 50.00,
    "shareCode": "{{shareCode}}"
 }
 > {%
