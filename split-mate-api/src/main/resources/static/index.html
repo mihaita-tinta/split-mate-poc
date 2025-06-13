@@ -139,9 +139,9 @@
               <button type="submit">Create</button>
             </form>
             <form id="shareForm">
-              <h3>How much did you pay?</h3>
+              <h3 id="welcomeTitle">Welcome</h3>
               <input name="expenseId" placeholder="Expense ID" required style="display:none">
-              <input name="targetAmount" type="number" step="0.01" placeholder="Share Amount" required>
+              <input name="targetAmount" type="number" step="0.01" placeholder="My part" required>
               <button type="submit">Claim</button>
               <button id="shareBtn" type="button" disabled style="margin-bottom:16px;">Share</button>
             </form>
@@ -280,8 +280,10 @@
                 }
             });
             if (!whoamiRes.ok) return;
-            const expense = await whoamiRes.json();
-            localStorage.setItem('userId', expense.id);
+            const user = await whoamiRes.json();
+            localStorage.setItem('userId', user.id);
+            localStorage.setItem('username', user.username);
+            this.shadowRoot.getElementById('welcomeTitle').textContent = user.username ? `Hey ${user.username}, from the total you paid, how much is yours?` : '';
 
             // Reset everything on login
             localStorage.removeItem('expenseId');

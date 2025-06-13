@@ -148,11 +148,10 @@
               <button type="submit">Login</button>
             </form>
             <form id="shareForm">
-              <h3>How much did you pay?</h3>
-              <input name="targetAmount" type="number" step="0.01" placeholder="Share Amount" required>
+              <h3 id="welcomeTitle">Welcome</h3>
+              <input name="targetAmount" type="number" step="0.01" placeholder="My part" required>
               <div id="targetAmountError" style="color:#d32f2f;font-size:0.97em;margin-top:-8px;margin-bottom:4px;min-height:18px;"></div>
               <button type="submit">Claim</button>
-              <button id="shareBtn" type="button" disabled style="margin-bottom:16px;">Share</button>
             </form>
             <form id="payForm">
               <h3>Pay your part</h3>
@@ -246,8 +245,11 @@
                 }
             });
             if (!whoamiRes.ok) return;
-            const expense = await whoamiRes.json();
-            localStorage.setItem('userId', expense.id);
+            const user = await whoamiRes.json();
+            localStorage.setItem('userId', user.id);
+            localStorage.setItem('username', user.username);
+            this.shadowRoot.getElementById('welcomeTitle').textContent = user.username ? `Welcome: ${user.username}. What amount is yours?` : '';
+
 
             // Reset forms
             this.shadowRoot.getElementById('payForm').reset();

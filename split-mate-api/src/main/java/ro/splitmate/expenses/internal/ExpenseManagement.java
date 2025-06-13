@@ -88,13 +88,8 @@ class ExpenseManagement {
                                             new InternalReferenceIdentifier(s.id().id()),
                                             s.sender(),
                                             s.receiver(),
-                                            s.shareAmount()));
-
-//                                    publisher.publishEvent(new PaymentOpened(
-//                                            new InternalReferenceIdentifier(s.id().id()),
-//                                            s.sender(),
-//                                            s.receiver(),
-//                                            s.shareAmount()));
+                                            s.shareAmount()))
+                                            .join();
                                 }
                                 return s;
                             })
