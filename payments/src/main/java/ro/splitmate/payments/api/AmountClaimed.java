@@ -3,10 +3,12 @@ package ro.splitmate.payments.api;
 import ro.splitmate.types.CustomerIdentifier;
 import ro.splitmate.types.TargetAmount;
 
+import java.math.BigDecimal;
+
 public record AmountClaimed(
-        InternalReferenceIdentifier internalReferenceIdentifier,
-        CustomerIdentifier senderId,
-        CustomerIdentifier receiverId,
-        TargetAmount amount) {
+        Long id,
+        Long senderId,
+        Long receiverId,
+        BigDecimal amount) {
 }
 

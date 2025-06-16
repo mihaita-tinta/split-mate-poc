@@ -7,7 +7,7 @@ import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.expenses.api.ExpenseCreated;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
 import ro.splitmate.expenses.internal.payments.InternalReferenceIdentifier;
-import ro.splitmate.expenses.internal.payments.AmountClaimed;
+import ro.splitmate.expenses.internal.outbound.AmountClaimed;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,11 +17,13 @@ class ExpenseManagement {
     private final ExpenseRepository repository;
     private final ApplicationEventPublisher publisher;
     private final MyPublisher kafkaPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    ExpenseManagement(ExpenseRepository repository, ApplicationEventPublisher publisher, MyPublisher kafkaPublisher) {
+    ExpenseManagement(ExpenseRepository repository, ApplicationEventPublisher publisher, MyPublisher kafkaPublisher, ApplicationEventPublisher applicationEventPublisher) {
         this.repository = repository;
         this.publisher = publisher;
         this.kafkaPublisher = kafkaPublisher;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public List<Expense> list(CustomerIdentifier customerId) {
@@ -84,10 +86,10 @@ class ExpenseManagement {
                             .map(s -> {
                                 if (s.shouldAllowNewPayments()) {
                                     kafkaPublisher.send(new AmountClaimed(
-                                            new InternalReferenceIdentifier(s.id().id()),
-                                            s.sender(),
-                                            s.receiver(),
-                                            s.shareAmount()))
+                                            s.id().id(),
+                                            s.sender().id(),
+                                            s.receiver().id(),
+                                            s.shareAmount().targetAmount()))
                                             .join();
                                 }
                                 return s;

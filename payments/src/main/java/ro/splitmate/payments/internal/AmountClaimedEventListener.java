@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import ro.splitmate.payments.api.AmountClaimed;
+import ro.splitmate.payments.api.InternalReferenceIdentifier;
+import ro.splitmate.types.CustomerIdentifier;
+import ro.splitmate.types.TargetAmount;
 
 import java.io.IOException;
 
@@ -26,10 +29,10 @@ public class AmountClaimedEventListener {
         var amountClaimed = mapper.readValue(event.value(), AmountClaimed.class);
         log.info("onAmountClaimed -  {} ", amountClaimed);
         Payment payment = paymentRepository.create(
-                amountClaimed.internalReferenceIdentifier(),
-                amountClaimed.senderId(),
-                amountClaimed.receiverId(),
-                amountClaimed.amount());
+                new InternalReferenceIdentifier(amountClaimed.id()),
+                new CustomerIdentifier(amountClaimed.senderId()),
+                new CustomerIdentifier(amountClaimed.receiverId()),
+                new TargetAmount(amountClaimed.amount()));
         log.info("onAmountClaimed -  created payment {} ", payment);
 
     }

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import ro.splitmate.expenses.internal.payments.AmountClaimed;
+import ro.splitmate.expenses.internal.outbound.AmountClaimed;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -30,7 +30,7 @@ public class MyPublisher {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return kafkaTemplate.send("payments.PaymentOpened", message.internalReferenceIdentifier().toString(),
+        return kafkaTemplate.send("expenses.AmountClaimed", message.toString(),
                             data)
                     .handle((res, ex) -> {
                         if (ex != null) {
