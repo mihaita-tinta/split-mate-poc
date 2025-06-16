@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import ro.splitmate.expenses.internal.outbound.AmountClaimed;
+import ro.splitmate.expenses.api.AmountClaimed;
 
 import java.util.concurrent.CompletableFuture;
 
