@@ -44,7 +44,7 @@ class ExpenseController {
     public ExpenseQRCode shareToOthers(
             @PathVariable ExpenseIdentifier expenseId,
             CustomerIdentifier customerId) {
-        var e = expenses.shareToOthers(customerId, expenseId);
+        var e = expenses.inviteFriends(customerId, expenseId);
         return new ExpenseQRCode(e.url(), e.qrCode());
     }
 

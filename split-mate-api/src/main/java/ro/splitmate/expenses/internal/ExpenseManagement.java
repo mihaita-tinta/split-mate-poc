@@ -1,7 +1,6 @@
 package ro.splitmate.expenses.internal;
 
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.splitmate.customers.api.CustomerIdentifier;
@@ -52,8 +51,8 @@ class ExpenseManagement {
                 .filter(e -> shareCode.equals(e.shareCode().get().value()));
     }
 
-    public QrCode shareToOthers(CustomerIdentifier currentUserId,
-                              ExpenseIdentifier expenseIdentifier) {
+    public QrCode inviteFriends(CustomerIdentifier currentUserId,
+                                ExpenseIdentifier expenseIdentifier) {
         var expense = repository.findByUserIdAndId(currentUserId, expenseIdentifier)
                 .orElseThrow();
         expense = expense.shareToOthers(currentUserId);
