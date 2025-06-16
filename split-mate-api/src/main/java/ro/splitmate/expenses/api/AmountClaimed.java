@@ -4,7 +4,7 @@ import org.springframework.modulith.events.Externalized;
 
 import java.math.BigDecimal;
 
-@Externalized("expenses.AmountClaimed::#{internalReferenceIdentifier()}")
+@Externalized("expenses.AmountClaimed::#{id()}")
 public record AmountClaimed(
         Long id,
         Long senderId,
