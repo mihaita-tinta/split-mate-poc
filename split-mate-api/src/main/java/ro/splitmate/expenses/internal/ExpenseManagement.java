@@ -89,7 +89,8 @@ class ExpenseManagement {
                                             s.sender().id(),
                                             s.receiver().id(),
                                             s.shareAmount().targetAmount()))
-                                            .join();
+                                            .join()
+                                    ;
                                 }
                                 return s;
                             })
