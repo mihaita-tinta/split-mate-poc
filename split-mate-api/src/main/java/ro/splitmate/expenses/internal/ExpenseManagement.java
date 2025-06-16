@@ -7,7 +7,7 @@ import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.expenses.api.ExpenseCreated;
 import ro.splitmate.expenses.api.ExpenseIdentifier;
 import ro.splitmate.expenses.internal.payments.InternalReferenceIdentifier;
-import ro.splitmate.expenses.internal.payments.PaymentOpened;
+import ro.splitmate.expenses.internal.payments.AmountClaimed;
 
 import java.util.List;
 import java.util.Optional;
@@ -83,7 +83,7 @@ class ExpenseManagement {
                     return saved.getShareNotPayedByUser(currentUserId)
                             .map(s -> {
                                 if (s.shouldAllowNewPayments()) {
-                                    kafkaPublisher.send(new PaymentOpened(
+                                    kafkaPublisher.send(new AmountClaimed(
                                             new InternalReferenceIdentifier(s.id().id()),
                                             s.sender(),
                                             s.receiver(),

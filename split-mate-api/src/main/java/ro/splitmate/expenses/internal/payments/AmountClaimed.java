@@ -4,8 +4,8 @@ import org.springframework.modulith.events.Externalized;
 import ro.splitmate.customers.api.CustomerIdentifier;
 import ro.splitmate.types.TargetAmount;
 
-@Externalized("payments.PaymentOpened::#{internalReferenceIdentifier()}")
-public record PaymentOpened (
+@Externalized("expenses.AmountClaimed::#{internalReferenceIdentifier()}")
+public record AmountClaimed(
         InternalReferenceIdentifier internalReferenceIdentifier,
         CustomerIdentifier senderId,
         CustomerIdentifier receiverId,

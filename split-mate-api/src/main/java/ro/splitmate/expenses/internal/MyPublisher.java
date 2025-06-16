@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import ro.splitmate.expenses.internal.payments.PaymentOpened;
+import ro.splitmate.expenses.internal.payments.AmountClaimed;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -23,7 +23,7 @@ public class MyPublisher {
     }
 
     @Async
-    public CompletableFuture<Void> send(PaymentOpened message) {
+    public CompletableFuture<Void> send(AmountClaimed message) {
         byte[] data = null;
         try {
             data = mapper.writeValueAsBytes(message);
