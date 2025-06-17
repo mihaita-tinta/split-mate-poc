@@ -74,7 +74,6 @@ class ExpenseManagement {
                     if (currentUserId.equals(e.userId())) {
                         return true;
                     }
-                    // TODO authorize claim using some code?
                     return e.shareCode().isPresent()
                     && e.shareCode().get().value().equals(req.getShareCode());
                 })
@@ -84,12 +83,12 @@ class ExpenseManagement {
                     return saved.getShareNotPayedByUser(currentUserId)
                             .map(s -> {
                                 if (s.shouldAllowNewPayments()) {
-                                    kafkaPublisher.send(new AmountClaimed(
+                                    applicationEventPublisher.publishEvent(new AmountClaimed(
                                             s.id().id(),
                                             s.sender().id(),
                                             s.receiver().id(),
-                                            s.shareAmount().targetAmount()))
-                                            .join()
+                                            s.shareAmount().targetAmount()));
+//                                            .join()
                                     ;
                                 }
                                 return s;
