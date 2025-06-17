@@ -83,12 +83,12 @@ class ExpenseManagement {
                     return saved.getShareNotPayedByUser(currentUserId)
                             .map(s -> {
                                 if (s.shouldAllowNewPayments()) {
-                                    applicationEventPublisher.publishEvent(new AmountClaimed(
+                                    kafkaPublisher.send(new AmountClaimed(
                                             s.id().id(),
                                             s.sender().id(),
                                             s.receiver().id(),
-                                            s.shareAmount().targetAmount()));
-//                                            .join()
+                                            s.shareAmount().targetAmount()))
+                                            .join()
                                     ;
                                 }
                                 return s;
