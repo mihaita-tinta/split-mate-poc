@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Gateway</title>
+  <style>
+    body {
+      background: #f4f6f8;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gateway-container {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+      padding: 36px 32px 28px 32px;
+      min-width: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .gateway-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #e0b96a;
+      margin-bottom: 18px;
+      letter-spacing: 0.02em;
+    }
+    .gateway-desc {
+      font-size: 1.08rem;
+      color: #222;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .amount {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #e0b96a;
+      margin-bottom: 6px;
+    }
+    .desc {
+      font-size: 1.1rem;
+      color: #b48b2e;
+      margin-bottom: 18px;
+    }
+    .banks {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .bank-btn {
+      background: linear-gradient(90deg, #e0b96a 0%, #f9e4b7 100%);
+      color: #222;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 1rem;
+      padding: 10px 18px;
+      box-shadow: 0 2px 8px rgba(224,185,106,0.08);
+      transition: background 0.2s;
+      margin-bottom: 0;
+    }
+    .bank-btn:hover {
+      background: linear-gradient(90deg, #f9e4b7 0%, #e0b96a 100%);
+    }
+    .qr-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .qr-label {
+      margin: 10px 0 6px 0;
+      color: #888;
+      font-size: 0.98rem;
+    }
+    .dummy-qr {
+      width: 120px;
+      height: 120px;
+      background: #fff;
+      border: 4px solid #e0b96a;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(224,185,106,0.08);
+      position: relative;
+    }
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .loader {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 4px solid #e0b96a;
+      border-top: 4px solid #fff;
+      animation: spin 1s linear infinite;
+      margin-bottom: 8px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="gateway-container">
+    <div class="gateway-title">Payment Gateway</div>
+    <div id="loadingBox" class="loading" style="display:none;">
+      <span class="loader"></span>
+      <span>Loading payment details...</span>
+    </div>
+    <div id="gatewayDesc" class="gateway-desc" style="display:none;">
+      You are about to pay <span class="amount"></span> for the <span class="desc"></span>.<br>
+      Please choose your bank or scan the QR code below.
+
+      <div class="banks">
+        <button class="bank-btn" id="catBtn">CatBank</button>
+        <button class="bank-btn" id="dogBtn">DogBank</button>
+        <button class="bank-btn" id="foxBtn">FoxBank</button>
+      </div>
+      <div class="qr-section">
+        <div class="qr-label">Or scan to login with your bank app</div>
+        <div>
+          <div><img class="dummy-qr" src="qrcode.png" alt="Qr Code Here"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function getQueryParams() {
+      const params = {};
+      window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+        params[decodeURIComponent(key)] = decodeURIComponent(value);
+      });
+      return params;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const params = getQueryParams();
+      const paymentId = params.id;
+      const loadingBox = document.getElementById('loadingBox');
+      const gatewayDesc = document.getElementById('gatewayDesc');
+      const amountSpan = document.querySelector('.amount');
+      const descSpan = document.querySelector('.desc');
+      if (!paymentId) {
+        loadingBox.style.display = 'flex';
+        gatewayDesc.style.display = 'none';
+        loadingBox.innerHTML = '<span style="color:#e0b96a;font-size:1.1em">Oh no! 🦄 This payment link is as real as a unicorn at a bank. Please check your link or ask your friend for a new one!</span>';
+        return;
+      }
+      loadingBox.style.display = 'flex';
+      gatewayDesc.style.display = 'none';
+      fetch(`/api/payments/${paymentId}`)
+        .then(r => {
+          if (!r.ok) throw new Error('not found');
+          return r.json();
+        })
+        .then(data => {
+          amountSpan.textContent = data.amount + ' RON';
+          descSpan.textContent = data.description;
+          loadingBox.style.display = 'none';
+          gatewayDesc.style.display = 'block';
+        })
+        .catch(() => {
+          loadingBox.innerHTML = '<span style="color:#e0b96a;font-size:1.1em">Oh no! 🦄 This payment link is as real as a unicorn at a bank. Please check your link or ask your friend for a new one!</span>';
+        });
+
+      // Forward id param to banks
+      function forwardToBank(page) {
+        if (paymentId) {
+          window.location.href = `${page}?id=${encodeURIComponent(paymentId)}`;
+        } else {
+          window.location.href = page;
+        }
+      }
+      document.getElementById('catBtn').onclick = () => forwardToBank('catbank.html');
+      document.getElementById('dogBtn').onclick = () => forwardToBank('dogbank.html');
+      document.getElementById('foxBtn').onclick = () => forwardToBank('foxbank.html');
+    });
+  </script>
+</body>
+</html>

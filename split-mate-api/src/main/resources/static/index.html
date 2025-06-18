@@ -1,0 +1,530 @@
+<!-- Save as expense-app.html and open in browser -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense App</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<expense-app></expense-app>
+<script type="module">
+    class ExpenseApp extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({ mode: 'open' });
+            this.shadowRoot.innerHTML = `
+          <style>
+            :host {
+              font-family: 'Segoe UI', Arial, sans-serif;
+              background: #f4f6f8;
+              color: #222;
+              display: block;
+              min-height: 100vh;
+            }
+            .container {
+              max-width: 480px;
+              margin: 0px auto;
+              background: #fff;
+              border-radius: 12px;
+              box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+              padding: 32px 32px 24px 32px;
+              position: relative;
+            }
+            .debug-toggle {
+              position: absolute;
+              top: 18px;
+              right: 18px;
+              z-index: 10;
+              background: #f4f6f8;
+              border: 1px solid #cfd8dc;
+              border-radius: 6px;
+              padding: 6px 14px;
+              font-size: 0.95em;
+              cursor: pointer;
+              color: #1976d2;
+              font-weight: 600;
+              transition: background 0.2s;
+            }
+            .debug-toggle.active {
+              background: #1976d2;
+              color: #fff;
+            }
+            h2 {
+              margin-top: 32px;
+              margin-bottom: 12px;
+              font-size: 1.25rem;
+              color: #2a3b4d;
+              font-weight: 600;
+              letter-spacing: 0.01em;
+            }
+            form {
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+              margin-bottom: 16px;
+            }
+            input, button {
+              font-size: 1rem;
+              padding: 10px 12px;
+              border-radius: 6px;
+              border: 1px solid #cfd8dc;
+              outline: none;
+              transition: border 0.2s;
+            }
+            input:focus {
+              border-color: #1976d2;
+              background: #f0f7ff;
+            }
+            button {
+              background: linear-gradient(90deg, #1976d2 0%, #1565c0 100%);
+              color: #fff;
+              border: none;
+              font-weight: 600;
+              cursor: pointer;
+              box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+              transition: background 0.2s;
+            }
+            button:hover {
+              background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+            }
+            #result {
+              margin: 18px 0 0 0;
+              padding: 10px 14px;
+              background: #e3f2fd;
+              color: #1976d2;
+              border-radius: 6px;
+              font-size: 0.98rem;
+              min-height: 24px;
+              word-break: break-all;
+            }
+            #expenseTitle {
+              font-weight: 600;
+              margin: 28px 0 10px 0;
+              font-size: 1.1rem;
+              color: #1565c0;
+              letter-spacing: 0.01em;
+            }
+            canvas#pieChart {
+              display: block;
+              margin: 0 auto 24px auto;
+              background: #f8fafc;
+              border-radius: 8px;
+              box-shadow: 0 1px 4px rgba(44,62,80,0.07);
+            }
+            @media (max-width: 600px) {
+              .container {
+                padding: 12px;
+                max-width: 98vw;
+              }
+              canvas#pieChart {
+                width: 98vw !important;
+                height: auto !important;
+              }
+            }
+          </style>
+          <div class="container">
+            <button id="debugToggle" class="debug-toggle" type="button">Debug</button>
+            <h1>Split-Mate corporation</h1>
+            <form id="loginForm">
+              <h3>You need to login first</h3>
+              <input name="username" placeholder="Username" required>
+              <input name="password" type="password" placeholder="password" required>
+              <button type="submit">Login</button>
+            </form>
+            <form id="expenseForm">
+              <h2>Create Expense</h2>
+              <input name="title" placeholder="Title" required>
+              <input name="targetAmount" type="number" step="0.01" placeholder="Amount" required>
+              <button type="submit">Create</button>
+            </form>
+            <form id="shareForm">
+              <h3 id="welcomeTitle">Welcome</h3>
+              <input name="expenseId" placeholder="Expense ID" required style="display:none">
+              <input name="targetAmount" type="number" step="0.01" placeholder="My part" required>
+              <button type="submit">Claim</button>
+              <button id="shareBtn" type="button" disabled style="margin-bottom:16px;">Invite friends</button>
+            </form>
+            <div id="result"></div>
+            <div id="pie">
+                <div style="position:relative;">
+                  <div id="expenseTitle"></div>
+                  <button id="refreshPieBtn" type="button" title="Refresh" style="position:absolute;top:0;right:0;background:none;border:none;cursor:pointer;padding:4px;">
+                    <!-- New refresh icon (FontAwesome SVG style) -->
+                    <svg width="22" height="22" viewBox="0 0 512 512" fill="none">
+                      <path d="M500.33 93.66a16 16 0 0 0-22.62 0l-48.6 48.6C393.9 99.77 329.41 64 256 64 132.29 64 32 164.29 32 288s100.29 224 224 224c87.13 0 166.09-50.13 202.09-128.09a16 16 0 0 0-28.62-14.18C397.09 437.13 330.41 480 256 480 150 480 64 393.94 64 288S150 96 256 96c61.86 0 119.37 28.13 156.09 74.09l-52.6 52.6a16 16 0 0 0 11.31 27.31h128a16 16 0 0 0 16-16v-128a16 16 0 0 0-16-16z" fill="#1976d2"/>
+                    </svg>
+                  </button>
+                  <span style="font-weight:bold; margin-top:20px;"></span>
+                </div>
+                <canvas id="pieChart" width="400" height="400"></canvas>
+            </div>
+            <button id="emoteBtn" type="button" style="margin: 16px auto 0 auto; display: none;">Start again</button>
+            <div id="emoteContainer" style="pointer-events:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:none;"></div>
+          </div>
+        `;
+        }
+
+        connectedCallback() {
+            this.shadowRoot.getElementById('loginForm').onsubmit = this.login.bind(this);
+            this.shadowRoot.getElementById('expenseForm').onsubmit = this.createExpense.bind(this);
+            this.shadowRoot.getElementById('shareForm').onsubmit = this.claimShare.bind(this);
+
+            this.hideExpenseForm();
+            this.hideShareForm();
+            this.hidePie();
+
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('expenseId');
+            localStorage.removeItem('expenseTotal');
+            localStorage.removeItem('shareId');
+
+            // Share button logic
+            this.shadowRoot.getElementById('shareBtn').onclick = async () => {
+                const expenseId = localStorage.getItem('expenseId');
+                if (expenseId) {
+                    const shareBtn = this.shadowRoot.getElementById('shareBtn');
+                    shareBtn.disabled = true;
+                    let shareDiv = this.shadowRoot.getElementById('shareQrDiv');
+                    if (!shareDiv) {
+                        shareDiv = document.createElement('div');
+                        shareDiv.id = 'shareQrDiv';
+                        shareDiv.style.margin = '18px 0 0 0';
+                        shareDiv.style.padding = '16px';
+                        shareDiv.style.background = '#f8fafc';
+                        shareDiv.style.borderRadius = '8px';
+                        shareDiv.style.textAlign = 'center';
+                        this.shadowRoot.getElementById('shareForm').appendChild(shareDiv);
+                    }
+                    shareDiv.innerHTML = '<span>Loading QR code...</span>';
+                    try {
+                        const res = await fetch(`http://localhost:8080/expenses/${expenseId}/qr`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('auth_token')
+                            }
+                        });
+                        if (!res.ok) throw new Error('Failed to fetch QR');
+                        const data = await res.json();
+                        shareDiv.innerHTML = `
+                          <div style='font-weight:bold;margin-bottom:8px;'>You need to send this link to the others:</div>
+                          <div style='word-break:break-all;margin-bottom:10px;'><a href='${data.url}' target='_blank'>${data.url}</a></div>
+                          <img src='${data.qrCode}' alt='QR Code' style='margin:12px auto;max-width:220px;display:block;background:#fff;padding:8px;border-radius:8px;box-shadow:0 2px 8px #0001;'>
+                        `;
+                    } catch (e) {
+                        shareDiv.innerHTML = '<span style="color:red;">Failed to load QR code.</span>';
+                    } finally {
+                        shareBtn.disabled = false;
+                    }
+                }
+            };
+
+            // If expenseId is in localStorage, auto-fill and hide expenseId input
+            const expenseId = localStorage.getItem('expenseId');
+            if (expenseId) {
+                const expenseIdInput = this.shadowRoot.querySelector('form#shareForm input[name="expenseId"]');
+                expenseIdInput.value = expenseId;
+                expenseIdInput.style.display = 'none';
+                this.shadowRoot.getElementById('shareBtn').disabled = false;
+                this.updatePieChart();
+            } else {
+                this.shadowRoot.getElementById('shareBtn').disabled = true;
+            }
+
+            this.shadowRoot.getElementById('emoteBtn').onclick = () => {
+                this.showLoginForm();
+                this.dropEmoticons();
+            };
+
+            // Refresh pie chart button logic
+            this.shadowRoot.getElementById('refreshPieBtn').onclick = () => {
+                this.updatePieChart();
+            };
+
+            // Debug toggle logic
+            const debugToggle = this.shadowRoot.getElementById('debugToggle');
+            const resultDiv = this.shadowRoot.getElementById('result');
+
+            resultDiv.style.display = 'none';
+            let debugActive = false;
+            debugToggle.onclick = () => {
+                debugActive = !debugActive;
+                if (debugActive) {
+                    debugToggle.classList.add('active');
+                    resultDiv.style.display = '';
+                } else {
+                    debugToggle.classList.remove('active');
+                    resultDiv.style.display = 'none';
+                }
+            };
+        }
+
+        async login(e) {
+            e.preventDefault();
+            const form = e.target;
+            const res = await fetch('http://localhost:8080/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + btoa(form.username.value + ':' + form.password.value)
+                }
+            });
+            const token = await res.text();
+            this.showResult('Token created: ' + token);
+            localStorage.setItem('auth_token', token);
+
+            // Fetch whoami and store userId
+            const whoamiRes = await fetch('http://localhost:8080/whoami', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('auth_token')
+                }
+            });
+            if (!whoamiRes.ok) return;
+            const user = await whoamiRes.json();
+            localStorage.setItem('userId', user.id);
+            localStorage.setItem('username', user.username);
+            this.shadowRoot.getElementById('welcomeTitle').textContent = user.username ? `Hey ${user.username}, from the total you paid, how much is yours?` : '';
+
+            // Reset everything on login
+            localStorage.removeItem('expenseId');
+            localStorage.removeItem('expenseTotal');
+            localStorage.removeItem('shareId');
+
+            // Reset forms
+            this.shadowRoot.getElementById('expenseForm').reset();
+            this.shadowRoot.getElementById('shareForm').reset();
+
+            // Show expenseId input again
+            const expenseIdInput = this.shadowRoot.querySelector('form#shareForm input[name="expenseId"]');
+            expenseIdInput.value = '';
+            expenseIdInput.style.display = '';
+
+            // Disable share button
+            this.shadowRoot.getElementById('shareBtn').disabled = true;
+
+            // Clear chart
+            if (this._pieChart) {
+                this._pieChart.destroy();
+                this._pieChart = null;
+            }
+            const ctx = this.shadowRoot.getElementById('pieChart').getContext('2d');
+            ctx.clearRect(0, 0, 400, 400);
+
+            // Hide login form after successful login
+            this.hideLoginForm();
+        }
+
+        hideLoginForm() {
+            const loginForm = this.shadowRoot.getElementById('loginForm');
+            if (loginForm) loginForm.style.display = 'none';
+
+            this.showExpenseForm();
+        }
+
+        hideExpenseForm() {
+            const form = this.shadowRoot.getElementById('expenseForm');
+            if (form) form.style.display = 'none';
+        }
+        hideShareForm() {
+            const form = this.shadowRoot.getElementById('shareForm');
+            if (form) form.style.display = 'none';
+        }
+        hidePie() {
+            const form = this.shadowRoot.getElementById('pie');
+            if (form) form.style.display = 'none';
+        }
+
+        showLoginForm() {
+            const loginForm = this.shadowRoot.getElementById('loginForm');
+            if (loginForm) loginForm.style.display = '';
+        }
+        showExpenseForm() {
+            const form = this.shadowRoot.getElementById('expenseForm');
+            if (form) form.style.display = '';
+        }
+        showShareForm() {
+            const form = this.shadowRoot.getElementById('shareForm');
+            if (form) form.style.display = '';
+            this.showPie();
+        }
+        showPie() {
+            const form = this.shadowRoot.getElementById('pie');
+            if (form) form.style.display = '';
+        }
+
+        async createExpense(e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                title: form.title.value,
+                targetAmount: parseFloat(form.targetAmount.value)
+            };
+            const res = await fetch('http://localhost:8080/expenses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('auth_token')
+                },
+                body: JSON.stringify(data)
+            });
+            const body = await res.json();
+            this.showResult('Expense created: ' + JSON.stringify(body));
+            localStorage.setItem('expenseId', body.id);
+
+            // Auto-fill and hide expenseId input in claim form
+            const expenseIdInput = this.shadowRoot.querySelector('form#shareForm input[name="expenseId"]');
+            expenseIdInput.value = body.id;
+            expenseIdInput.style.display = 'none';
+
+            // Enable share button
+            this.shadowRoot.getElementById('shareBtn').disabled = false;
+
+            // Store total amount and title for chart
+            localStorage.setItem('expenseTotal', body.targetAmount);
+            localStorage.setItem('expenseTitle', body.title);
+            // Draw chart (empty shares for now)
+            this.updatePieChart();
+            this.showShareForm();
+            this.hideExpenseForm();
+        }
+
+        async claimShare(e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                targetAmount: parseFloat(form.targetAmount.value)
+            };
+            // Use expenseId from localStorage
+            const expenseId = localStorage.getItem('expenseId');
+            const res = await fetch(`http://localhost:8080/expenses/${expenseId}/shares`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('auth_token')
+                },
+                body: JSON.stringify(data)
+            });
+            const body = await res.json();
+            this.showResult('Share claimed: ' + JSON.stringify(body));
+            localStorage.setItem('shareId', body.id);
+
+            // Update chart after claiming share
+            this.updatePieChart();
+        }
+
+        showResult(msg) {
+            const resultDiv = this.shadowRoot.getElementById('result');
+            resultDiv.textContent = msg;
+            // Only show if debug is active
+            const debugToggle = this.shadowRoot.getElementById('debugToggle');
+            if (debugToggle && debugToggle.classList.contains('active')) {
+                resultDiv.style.display = '';
+            } else {
+                resultDiv.style.display = 'none';
+            }
+        }
+
+        async updatePieChart() {
+            const expenseId = localStorage.getItem('expenseId');
+            if (!expenseId) return;
+
+            // Set expense title above chart
+            const expenseTitle = localStorage.getItem('expenseTitle') || '';
+            this.shadowRoot.getElementById('expenseTitle').textContent = expenseTitle ? `Expense: ${expenseTitle}` : '';
+
+            // Fetch shares for this expense
+            const res = await fetch(`http://localhost:8080/expenses/${expenseId}/shares`, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('auth_token')
+                }
+            });
+            if (!res.ok) return;
+            const body = await res.json();
+            const shares = body.shares || [];
+            const total = parseFloat(localStorage.getItem('expenseTotal')) || 0;
+
+            // Prepare data for chart
+            const shareAmounts = shares.map(s => s.targetAmount);
+            const shareLabels = shares.map(s => {
+                const payed = s.status === 'PAYMENT_CONFIRMED' ? ' (Paid)' : '';
+                return s.senderid == localStorage.getItem('userId') ? `Me` : `User ${s.senderid} ${payed}`
+            });
+            if (shares.filter(s => s.status === 'PAYMENT_CONFIRMED').length > 0) {
+                this.dropEmoticons();
+            }
+            const sumShares = shareAmounts.reduce((a, b) => a + b, 0);
+            const remainder = Math.max(0, total - sumShares);
+            const backgroundColors = [
+                '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'
+            ];
+            let chartColors = backgroundColors.slice(0, shareAmounts.length);
+
+            if (remainder > 0) {
+                shareAmounts.push(remainder);
+                shareLabels.push('Unclaimed');
+                chartColors.push('#FF0000'); // Red for difference
+            }
+
+            // Draw or update chart
+            if (!this._pieChart) {
+                const ctx = this.shadowRoot.getElementById('pieChart').getContext('2d');
+                this._pieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: shareLabels,
+                        datasets: [{
+                            data: shareAmounts,
+                            backgroundColor: chartColors
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        plugins: {
+                            legend: { display: true }
+                        }
+                    }
+                });
+            } else {
+                this._pieChart.data.labels = shareLabels;
+                this._pieChart.data.datasets[0].data = shareAmounts;
+                this._pieChart.data.datasets[0].backgroundColor = chartColors;
+                this._pieChart.update();
+            }
+        }
+
+        dropEmoticons() {
+            const emotes = ['🎉', '🤑', '🤑', '🤑', '🤑', '🤑', '🤑', '🤑',
+                '🥳', '🎊', '💸', '🍕', '🍻', '😄', '👏', '💰', '🤑','🤑',
+                '💸','💸','💸','💸','💸','💸','💸','💸','💸','💸','💸','💸'
+
+            ];
+            const container = this.shadowRoot.getElementById('emoteContainer');
+            const count = 30;
+            for (let i = 0; i < count; i++) {
+                const emote = document.createElement('div');
+                emote.textContent = emotes[Math.floor(Math.random() * emotes.length)];
+                emote.style.position = 'fixed';
+                emote.style.left = Math.random() * 90 + 'vw';
+                emote.style.top = '-3em';
+                emote.style.fontSize = (Math.random() * 1.5 + 1.5) + 'em';
+                emote.style.pointerEvents = 'none';
+                emote.style.transition = 'transform 2.2s cubic-bezier(.23,1.02,.64,1), opacity 2.2s';
+                emote.style.transform = `translateY(0) rotate(${Math.random() * 360}deg)`;
+                emote.style.opacity = '1';
+                container.appendChild(emote);
+
+                setTimeout(() => {
+                    emote.style.transform = `translateY(${90 + Math.random() * 10}vh) rotate(${Math.random() * 360}deg)`;
+                    emote.style.opacity = '0.7';
+                }, 10);
+
+                setTimeout(() => {
+                    emote.remove();
+                }, 2300 + Math.random() * 400);
+            }
+        }
+    }
+    customElements.define('expense-app', ExpenseApp);
+</script>
+</body>
+</html>

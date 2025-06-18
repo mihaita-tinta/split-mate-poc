@@ -1,0 +1,4 @@
+wrk.method = "PUT"
+wrk.headers["content-type"] = "application/json"
+wrk.headers["Authorization"] = "Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoianVkeSIsImV4cCI6MTc0OTc2NTE2OCwiaWF0IjoxNzQ5NzI5MTY4LCJzY29wZSI6IkNVU1RPTUVSXzEyMixST0xFX1VTRVIifQ.M8II-Y08fUXf5fo6xNJuCyfkAev429_G53BlOpVwQhw6CpESdECbzlDYZq1DZ5vo81TfFR1e6bnWop5jxHVMJBTs2p_aI6jpMj_hn6xkK5ukQRtIRAfnP7W0-thP5qaO34y_E3QPucso_i2I3DAPaM7aw_ikgu3COyrO5809qe98as5OOFVMmoJMj8_7txjzzc_l5ZaxrpDD4jrWbmumEZZljGbJ3UtRiJBzsIypEiL-Q1pi819_tXDkaCHfaZqltzaWPPIvice9DyaJjOyDahkpFHf468mdr8rgvLriTHKXqxqopp4eWPBi48YPYtXVX5vk6PO07ly_WVplAoJwwg"
+wrk.body = "{ \"targetAmount\": 100.00, \"shareCode\": \"519b6117-f46c-4ddb-961a-c8480e060e5f\"}"

@@ -1,0 +1,27 @@
+server:
+  port: 8888
+jwt:
+  private.key: classpath:app.key
+  public.key:  classpath:app.pub
+spring:
+  datasource:
+    username: modulith
+    password: modulith
+    url: jdbc:postgresql://localhost:5433/payouts
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: false
+    show-sql: true
+  sql:
+    init:
+      mode: always
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info
+logging:
+  level:
+    ro.splitmate.payouts: DEBUG
+    org.springframework.modulith: DEBUG

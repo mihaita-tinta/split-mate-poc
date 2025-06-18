@@ -1,0 +1,24 @@
+services:
+  wrk-app:
+    platform: linux/arm64
+    image: 'wrk:latest'
+    volumes:
+      - ./wrk/reports:/home/reports
+      - ./wrk/post.lua:/home/post.lua
+    command:
+      - -t10
+      - -c10
+      - -d600
+      - --latency
+      - -s/home/post.lua
+      - http://host.docker.internal:8080/expenses/117/shares
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '2'
+          memory: 1G

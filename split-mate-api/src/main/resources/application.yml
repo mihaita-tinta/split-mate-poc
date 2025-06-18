@@ -1,0 +1,35 @@
+jwt:
+  private.key: classpath:app.key
+  public.key:  classpath:app.pub
+spring:
+  datasource:
+    username: modulith
+    password: modulith
+    url: jdbc:postgresql://localhost:5432/splitmate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: false
+    show-sql: true
+  sql:
+    init:
+      mode: always
+  threads:
+    virtual:
+      enabled: true
+  kafka:
+    producer:
+        properties:
+          request.timeout.ms: 1000
+          max.block.ms: 2000
+#    bootstrap-servers: localhost:9292
+        bootstrap-servers: localhost:9092
+logging:
+  level:
+    ro.splitmate: DEBUG
+    org.springframework.modulith: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info
