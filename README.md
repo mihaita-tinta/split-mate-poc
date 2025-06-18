@@ -1,4 +1,9 @@
 # split-mate-poc
+This project is the supporting material of [From Strategic Design to Modular, Eventful, and Reliable Systems](https://www.meetup.com/bucharest-big-data-meetup/events/307912553/) 
+meetup presentation.
+You can also find more information from my Medium [post](https://mihaita-tinta.medium.com).
+
+# Description
 This application helps friends split various costs.
 It represents a Proof-Of-Concept to address several things:
 - Apply Strategic Design to discover key deliverables and the business domain
