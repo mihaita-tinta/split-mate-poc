@@ -3,6 +3,7 @@ This project is the supporting material of [From Strategic Design to Modular, Ev
 meetup presentation.
 You can also find more information from my Medium [post](https://mihaita-tinta.medium.com).
 
+Slides are available [here](From%20strategic%20design%20to%20sending%20events-shared.pdf).
 # Description
 This application helps friends split various costs.
 It represents a Proof-Of-Concept to address several things:
